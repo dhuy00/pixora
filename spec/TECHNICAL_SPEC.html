@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pixaura — Technical Specification &amp; Architecture</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --bg-surface: #161922;
+      --bg-elevated: #1e2230;
+      --border: #2a3042;
+      --text: #e6e9f0;
+      --text-muted: #9aa3b8;
+      --accent: #7c5cff;
+      --accent-soft: rgba(124, 92, 255, 0.14);
+      --accent-2: #22d3ee;
+      --accent-2-soft: rgba(34, 211, 238, 0.12);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --code-bg: #12151e;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-elevated: #f1f5f9;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --accent: #6344f5;
+      --accent-soft: rgba(99, 68, 245, 0.1);
+      --accent-2: #0891b2;
+      --accent-2-soft: rgba(8, 145, 178, 0.1);
+      --success: #059669;
+      --warning: #d97706;
+      --danger: #dc2626;
+      --code-bg: #f1f5f9;
+      --shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      font-size: 15px;
+    }
+
+    /* Header */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+    }
+
+    .pixel-logo {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border-radius: 6px;
+      display: inline-grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      padding: 4px;
+    }
+
+    .pixel-logo span {
+      background: #fff;
+      border-radius: 1px;
+    }
+
+    .pixel-logo span:nth-child(2),
+    .pixel-logo span:nth-child(4),
+    .pixel-logo span:nth-child(6),
+    .pixel-logo span:nth-child(8) {
+      opacity: 0.35;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid rgba(124, 92, 255, 0.3);
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .doc-link {
+      text-decoration: none;
+      background: var(--bg-elevated);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      padding: 0.45rem 0.85rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.15s ease;
+    }
+
+    .doc-link:hover {
+      color: var(--text);
+      border-color: var(--accent-2);
+    }
+
+    .theme-btn {
+      background: var(--bg-elevated);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.45rem 0.85rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: border-color 0.15s ease;
+    }
+
+    .theme-btn:hover {
+      border-color: var(--accent);
+    }
+
+    /* Layout */
+    .layout {
+      max-width: 1320px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 2.5rem;
+      padding: 2rem;
+    }
+
+    /* Sidebar TOC */
+    .sidebar {
+      position: sticky;
+      top: 4.5rem;
+      height: calc(100vh - 6rem);
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    .toc-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .toc-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .toc-list a {
+      display: block;
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      padding: 0.4rem 0.65rem;
+      border-radius: 6px;
+      border-left: 2px solid transparent;
+      transition: all 0.15s ease;
+    }
+
+    .toc-list a:hover {
+      color: var(--text);
+      background: var(--bg-elevated);
+      border-left-color: var(--accent);
+    }
+
+    .toc-sub {
+      padding-left: 1.25rem !important;
+      font-size: 0.82rem !important;
+    }
+
+    /* Main Content */
+    main {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+
+    .hero-card {
+      background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-elevated) 100%);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card h1 {
+      font-size: 1.9rem;
+      line-height: 1.25;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-card p {
+      color: var(--text-muted);
+      font-size: 1.02rem;
+      max-width: 82ch;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tech-pill {
+      font-size: 0.78rem;
+      font-family: "JetBrains Mono", Consolas, monospace;
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      color: var(--accent-2);
+    }
+
+    section {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem 2rem;
+      box-shadow: var(--shadow);
+      scroll-margin-top: 4.75rem;
+    }
+
+    h2 {
+      font-size: 1.35rem;
+      margin-bottom: 1.15rem;
+      padding-bottom: 0.65rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .sec-num {
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 0.15rem 0.55rem;
+      border-radius: 6px;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      margin: 1.25rem 0 0.6rem;
+      color: var(--text);
+    }
+
+    p {
+      margin-bottom: 0.85rem;
+    }
+
+    ul, ol {
+      padding-left: 1.35rem;
+      margin-bottom: 0.85rem;
+    }
+
+    li {
+      margin-bottom: 0.35rem;
+    }
+
+    code {
+      font-family: "JetBrains Mono", Consolas, Monaco, monospace;
+      font-size: 0.84em;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      padding: 0.12rem 0.4rem;
+      border-radius: 4px;
+      color: var(--accent-2);
+    }
+
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.1rem 1.25rem;
+      overflow-x: auto;
+      margin: 0.75rem 0 1.15rem;
+      font-family: "JetBrains Mono", Consolas, Monaco, monospace;
+      font-size: 0.84rem;
+      line-height: 1.55;
+      color: var(--text);
+    }
+
+    pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      color: inherit;
+      font-size: inherit;
+    }
+
+    /* Grid Cards */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 0.75rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.25rem;
+      margin-top: 0.75rem;
+    }
+
+    .card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.15rem;
+    }
+
+    .card h4 {
+      font-size: 0.98rem;
+      margin-bottom: 0.45rem;
+      color: var(--accent-2);
+    }
+
+    /* Feature Blocks */
+    .feature-block {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.35rem 1.5rem;
+      margin-bottom: 1.25rem;
+      scroll-margin-top: 4.75rem;
+    }
+
+    .feature-block:last-child {
+      margin-bottom: 0;
+    }
+
+    .feature-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .feature-header h3 {
+      margin: 0;
+      font-size: 1.12rem;
+    }
+
+    .spec-grid {
+      display: grid;
+      grid-template-columns: 190px 1fr;
+      gap: 0.75rem 1.25rem;
+    }
+
+    .spec-label {
+      font-weight: 600;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      padding-top: 0.1rem;
+    }
+
+    .spec-value ul {
+      margin-bottom: 0;
+    }
+
+    /* Architecture Diagram Boxes */
+    .arch-diagram {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin-top: 1rem;
+    }
+
+    .arch-tier {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.15rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .arch-tier-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .arch-node {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.65rem 0.8rem;
+      font-size: 0.86rem;
+    }
+
+    .arch-node strong {
+      display: block;
+      color: var(--accent-2);
+      font-size: 0.88rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .arch-node span {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    /* Plane Stack Visualization */
+    .canvas-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin: 0.85rem 0;
+    }
+
+    .canvas-plane {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .canvas-plane:nth-child(1) { border-left-color: #f43f5e; }
+    .canvas-plane:nth-child(2) { border-left-color: #7c5cff; }
+    .canvas-plane:nth-child(3) { border-left-color: #22d3ee; }
+    .canvas-plane:nth-child(4) { border-left-color: #10b981; }
+
+    /* Tables */
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 0.5rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 0.75rem 0.9rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--bg-elevated);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* HTTP Method Pills */
+    .method {
+      display: inline-block;
+      font-family: "JetBrains Mono", Consolas, monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .m-get { background: rgba(34, 211, 238, 0.14); color: var(--accent-2); border: 1px solid rgba(34, 211, 238, 0.3); }
+    .m-post { background: rgba(16, 185, 129, 0.14); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .m-put { background: rgba(245, 158, 11, 0.14); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
+    .m-del { background: rgba(239, 68, 68, 0.14); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+
+    /* Entity Schema Cards */
+    .entity-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .entity-box {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .entity-title {
+      background: var(--code-bg);
+      padding: 0.55rem 0.9rem;
+      font-weight: 700;
+      font-family: "JetBrains Mono", Consolas, monospace;
+      font-size: 0.86rem;
+      color: var(--accent-2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .entity-fields {
+      list-style: none;
+      padding: 0.65rem 0.9rem;
+      margin: 0;
+      font-size: 0.83rem;
+    }
+
+    .entity-fields li {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.22rem 0;
+      border-bottom: 1px dashed rgba(154, 163, 184, 0.15);
+    }
+
+    .entity-fields li:last-child {
+      border-bottom: none;
+    }
+
+    .pk { color: var(--warning); font-weight: 600; font-size: 0.74rem; }
+    .fk { color: var(--accent); font-weight: 600; font-size: 0.74rem; }
+    .col-type { color: var(--text-muted); font-family: "JetBrains Mono", monospace; font-size: 0.75rem; }
+
+    .scope-pill {
+      display: inline-block;
+      padding: 0.15rem 0.55rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .pill-phase {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid rgba(124, 92, 255, 0.3);
+    }
+
+    @media (max-width: 960px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        display: none;
+      }
+      .spec-grid, .arch-diagram {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="pixel-logo" aria-hidden="true">
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+      </div>
+      <span>Pixaura Technical Spec</span>
+      <span class="badge">v1.0 Architecture</span>
+    </div>
+    <div class="topbar-actions">
+      <a class="doc-link" href="PRD.html">View PRD.html &rarr;</a>
+      <button class="theme-btn" id="themeToggle" type="button">Toggle Light / Dark</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="toc-title">Technical Contents</div>
+      <ul class="toc-list">
+        <li><a href="#architecture">1. System Architecture</a></li>
+        <li><a href="#stack">2. Technology Stack</a></li>
+        <li><a href="#structure">3. Repository Structure</a></li>
+        <li><a href="#engine">4. Studio &amp; Canvas Engine</a></li>
+        <li><a href="#eng-planes" class="toc-sub">4.1 4-Plane Canvas Stack</a></li>
+        <li><a href="#eng-memory" class="toc-sub">4.2 Cel Memory Model</a></li>
+        <li><a href="#eng-algorithms" class="toc-sub">4.3 Drawing Algorithms</a></li>
+        <li><a href="#eng-history" class="toc-sub">4.4 Undo / Redo Delta Engine</a></li>
+        <li><a href="#animation">5. Animation &amp; Export Pipeline</a></li>
+        <li><a href="#converter">6. Image Converter Pipeline</a></li>
+        <li><a href="#persistence">7. State, Sync &amp; Migration</a></li>
+        <li><a href="#database">8. Database Schema &amp; Storage</a></li>
+        <li><a href="#api">9. API Endpoints &amp; Contracts</a></li>
+        <li><a href="#security">10. Security &amp; Performance</a></li>
+        <li><a href="#roadmap">11. Implementation Roadmap</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Document -->
+    <main>
+      <div class="hero-card">
+        <h1>Technical Specification &amp; Architecture: Pixaura</h1>
+        <p>
+          Full-stack engineering design for Pixaura's hybrid architecture: a high-frequency client-side 2D Canvas Studio Engine (supporting <code>512&times;512</code> multi-layer animations, off-thread quantization, and local-first IndexedDB persistence) paired with a Next.js App Router &amp; PostgreSQL community platform.
+        </p>
+        <div class="hero-pills">
+          <span class="tech-pill">Next.js 15 (App Router)</span>
+          <span class="tech-pill">TypeScript 5</span>
+          <span class="tech-pill">HTML5 2D Canvas + Uint32Array</span>
+          <span class="tech-pill">Zustand + Immer</span>
+          <span class="tech-pill">Web Workers (image-q + gifenc)</span>
+          <span class="tech-pill">Dexie.js (IndexedDB)</span>
+          <span class="tech-pill">PostgreSQL + Drizzle ORM</span>
+          <span class="tech-pill">Cloudflare R2 / Supabase Storage</span>
+        </div>
+      </div>
+
+      <!-- 1. System Architecture Overview -->
+      <section id="architecture">
+        <h2><span class="sec-num">01</span> System Architecture Overview</h2>
+        <p>
+          Pixaura separates interactive pixel manipulation from server-rendered community discovery. All drawing, onion skinning, quantization, and export tasks run with zero network latency on the client, while project synchronization, authentication, and gallery feeds run through typed Next.js route handlers and PostgreSQL.
+        </p>
+
+        <div class="arch-diagram">
+          <div class="arch-tier">
+            <div class="arch-tier-title"><span>1. Browser Client</span><span>60–120 FPS</span></div>
+            <div class="arch-node">
+              <strong>React 19 + Tailwind + Radix UI</strong>
+              <span>Studio docks, modals, color popovers, gallery grids, and keyboard shortcut manager.</span>
+            </div>
+            <div class="arch-node">
+              <strong>Zustand Studio Store</strong>
+              <span>Decouples pointer events from React renders; manages layers, frames, tools, and palettes.</span>
+            </div>
+            <div class="arch-node">
+              <strong>HTML5 2D Canvas Engine</strong>
+              <span>4 stacked canvases backed by sparse <code>Uint32Array</code> RGBA buffers per <code>[Frame, Layer]</code> cel.</span>
+            </div>
+            <div class="arch-node">
+              <strong>Web Worker Pool</strong>
+              <span>Off-main-thread <code>image-q</code> quantizer/dithering &amp; <code>gifenc</code> animated GIF encoder.</span>
+            </div>
+            <div class="arch-node">
+              <strong>IndexedDB (Dexie.js)</strong>
+              <span>Local-first guest drafts, compressed cel buffers, and offline crash recovery.</span>
+            </div>
+          </div>
+
+          <div class="arch-tier">
+            <div class="arch-tier-title"><span>2. Next.js Edge / Server</span><span>SSR + API</span></div>
+            <div class="arch-node">
+              <strong>App Router RSC Pages</strong>
+              <span>Server-rendered Explore feed (<code>/</code>), Artwork Detail (<code>/art/:postId</code>), and Creator Profiles (<code>/u/:username</code>).</span>
+            </div>
+            <div class="arch-node">
+              <strong>REST / RPC Route Handlers</strong>
+              <span>Zod-validated endpoints for project sync, guest migration, post publishing, and social actions.</span>
+            </div>
+            <div class="arch-node">
+              <strong>Authentication Guard</strong>
+              <span>Supabase Auth / Better Auth managing sessions, OAuth, and verified-email enforcement.</span>
+            </div>
+            <div class="arch-node">
+              <strong>Rate Limiter &amp; Validator</strong>
+              <span>Token-bucket rate limiting (comments 5/min, uploads 10/10min) + magic-byte MIME verification.</span>
+            </div>
+          </div>
+
+          <div class="arch-tier">
+            <div class="arch-tier-title"><span>3. Persistence &amp; Storage</span><span>ACID + CDN</span></div>
+            <div class="arch-node">
+              <strong>PostgreSQL 16 (Drizzle ORM)</strong>
+              <span>Relational store for Users, Projects, Layers, Frames, Cels, Source Images, Posts, Tags, and Social graphs.</span>
+            </div>
+            <div class="arch-node">
+              <strong>Object Storage (R2 / Supabase)</strong>
+              <span>Stores immutable <code>SOURCE_IMAGE</code> uploads (&le;10MB) and rendered <code>POST</code> previews (PNG/GIF/WebP).</span>
+            </div>
+            <div class="arch-node">
+              <strong>Global Edge CDN</strong>
+              <span>Serves published pixel art previews with immutable cache headers and crisp nearest-neighbor scaling.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. Technology Stack -->
+      <section id="stack">
+        <h2><span class="sec-num">02</span> Technology Stack Specification</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Layer</th>
+                <th>Technology</th>
+                <th>Version</th>
+                <th>Engineering Justification</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Framework</strong></td>
+                <td><code>Next.js (App Router)</code></td>
+                <td><code>15.x</code></td>
+                <td>Unified full-stack project: SSR/SEO for public community galleries and isolated client SPA boundary (<code>"use client"</code>) for <code>/studio</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>Language</strong></td>
+                <td><code>TypeScript</code></td>
+                <td><code>5.x</code></td>
+                <td>Strict typing across binary buffer operations (<code>Uint32Array</code>), Web Worker message contracts, and SQL queries.</td>
+              </tr>
+              <tr>
+                <td><strong>UI &amp; Styling</strong></td>
+                <td><code>Tailwind CSS</code> + <code>Radix UI</code></td>
+                <td><code>4.x</code></td>
+                <td>Accessible headless components (color picker popovers, sliders, dialogs, layer menus) styled with zero-runtime CSS variables.</td>
+              </tr>
+              <tr>
+                <td><strong>State Management</strong></td>
+                <td><code>Zustand</code> + <code>Immer</code></td>
+                <td><code>5.x</code></td>
+                <td>Allows the canvas engine to mutate buffers and notify specific UI slices without triggering full React tree re-renders on every pixel.</td>
+              </tr>
+              <tr>
+                <td><strong>Drag &amp; Drop</strong></td>
+                <td><code>@dnd-kit/core</code> + <code>sortable</code></td>
+                <td><code>6.x</code></td>
+                <td>Keyboard- and pointer-accessible reordering for vertical Layer stacks (up to 16) and horizontal Timeline frames (up to 64).</td>
+              </tr>
+              <tr>
+                <td><strong>Image Quantization</strong></td>
+                <td><code>image-q</code> (Web Worker)</td>
+                <td><code>4.x</code></td>
+                <td>Implements Wu/NeuQuant color quantization (<code>2–64</code> colors), custom palette mapping, Bayer ordered dithering, and Floyd-Steinberg dithering.</td>
+              </tr>
+              <tr>
+                <td><strong>GIF &amp; PNG Export</strong></td>
+                <td><code>gifenc</code> + <code>upng-js</code></td>
+                <td><code>1.x / 2.x</code></td>
+                <td>High-speed pure-JS animated GIF encoder supporting transparent color indices and per-frame millisecond hold times.</td>
+              </tr>
+              <tr>
+                <td><strong>Client Storage</strong></td>
+                <td><code>Dexie.js</code> (IndexedDB)</td>
+                <td><code>4.x</code></td>
+                <td>Bypasses the 5MB <code>localStorage</code> ceiling to store multi-frame pixel buffers and 10MB source reference images for guest users.</td>
+              </tr>
+              <tr>
+                <td><strong>Database &amp; ORM</strong></td>
+                <td><code>PostgreSQL</code> + <code>Drizzle ORM</code></td>
+                <td><code>PG 16</code></td>
+                <td>Zero-overhead type-safe SQL queries, composite primary keys for idempotent social actions, and <code>BYTEA</code>/<code>JSONB</code> support.</td>
+              </tr>
+              <tr>
+                <td><strong>Auth &amp; Object Store</strong></td>
+                <td><code>Supabase</code> or <code>Better Auth + R2</code></td>
+                <td><code>Latest</code></td>
+                <td>Handles email/password + OAuth sessions and S3-compatible presigned uploads for source images and published artwork media.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 3. Repository & Directory Structure -->
+      <section id="structure">
+        <h2><span class="sec-num">03</span> Repository &amp; Module Structure</h2>
+        <p>The codebase isolates the pure TypeScript <strong>Studio Engine</strong> (<code>src/engine/</code>) from React components (<code>src/components/</code>) so canvas algorithms, history patches, and exporters are independently testable.</p>
+<pre><code>pixaura/
+├── public/                        # Static assets, curated starter palettes, icons
+├── spec/                          # Product and Technical Documentation
+│   ├── PRD.md                     # Markdown Product Requirements Document
+│   ├── PRD.html                   # Interactive HTML PRD
+│   ├── TECHNICAL_SPEC.md          # Markdown Technical Specification
+│   └── TECHNICAL_SPEC.html        # Interactive HTML Technical Specification
+├── src/
+│   ├── app/                       # Next.js App Router
+│   │   ├── (public)/              # Public routes with Global Header
+│   │   │   ├── page.tsx           # / (Explore &amp; Community Feed)
+│   │   │   ├── art/[postId]/      # /art/:postId (Artwork Detail &amp; Comments)
+│   │   │   └── u/[username]/      # /u/:username (Creator Profile)
+│   │   ├── (auth)/                # /login, /register, /settings
+│   │   ├── workspace/             # /workspace (Drafts, Published, References, Bookmarks)
+│   │   ├── studio/                # Distraction-free Studio Layout (90%+ Canvas Viewport)
+│   │   │   ├── page.tsx           # /studio (Guest / New Local Project)
+│   │   │   └── [projectId]/       # /studio/:projectId (Authenticated Cloud Project)
+│   │   └── api/                   # Route Handlers (projects, posts, upload, social)
+│   ├── components/
+│   │   ├── ui/                    # Shared primitives (Button, Modal, Slider, Select, Tooltip)
+│   │   ├── gallery/               # ArtCard, FilterBar, PaletteSwatches, CommentSection
+│   │   └── studio/                # ToolDock, CanvasStage, LayerPanel, TimelineDrawer, ConverterModal
+│   ├── engine/                    # Pure TypeScript Studio Engine (Framework-Agnostic)
+│   │   ├── canvas/                # MultiPlaneStage, ViewportTransform, Checkerboard, GridOverlay
+│   │   ├── tools/                 # Pencil, Eraser, FloodFill, Eyedropper, BresenhamLine, Rect, Circle
+│   │   ├── history/               # DeltaPatchHistory (50+ step Undo/Redo stack)
+│   │   ├── animation/             # FramePlaybackScheduler, OnionSkinCompositor
+│   │   ├── exporter/              # PngScaler, SpriteSheetPacker, GifExporter
+│   │   └── workers/               # converter.worker.ts (image-q) &amp; gif.worker.ts (gifenc)
+│   ├── store/                     # Zustand State Slices
+│   │   ├── useStudioStore.ts      # Project dimensions, active tool, brush size, palette, layers
+│   │   └── useTimelineStore.ts    # Frames, active frame index, FPS, loop mode, onion skinning
+│   ├── db/                        # Persistence Layer
+│   │   ├── schema.ts              # Drizzle PostgreSQL schema &amp; relations
+│   │   └── local-db.ts            # Dexie.js IndexedDB guest workspace store
+│   └── lib/                       # Zod validators, auth session helpers, R2/Storage client
+└── tests/                         # Vitest engine unit tests &amp; Playwright E2E flows</code></pre>
+      </section>
+
+      <!-- 4. Studio Engine & Canvas Architecture -->
+      <section id="engine">
+        <h2><span class="sec-num">04</span> Studio Engine &amp; Canvas Architecture</h2>
+        <p>
+          Replacing the prototype's DOM-based grid (which creates <code>W &times; H</code> HTML elements) is critical: a <code>512&times;512</code> canvas contains <strong>262,144 pixels per layer</strong>. Pixaura uses a <strong>4-Plane HTML5 2D Canvas Stack</strong> backed by raw <code>Uint32Array</code> pixel buffers.
+        </p>
+
+        <!-- 4.1 4-Plane Canvas Stack -->
+        <div class="feature-block" id="eng-planes">
+          <div class="feature-header">
+            <h3>4.1 Multi-Plane Viewport Stack</h3>
+            <span class="badge">60–120 FPS Rendering</span>
+          </div>
+          <div class="canvas-stack">
+            <div class="canvas-plane">
+              <div>
+                <strong>Plane 4: Interaction &amp; Tool Preview Overlay (Screen Resolution)</strong>
+                <div style="color: var(--text-muted); font-size: 0.85rem;">Renders crisp 1px grid lines (at zoom &ge; 800%), brush cursor outline, and uncommitted shape previews (Line, Rectangle, Circle) during pointer drag.</div>
+              </div>
+              <code>z-index: 40</code>
+            </div>
+            <div class="canvas-plane">
+              <div>
+                <strong>Plane 3: Composite Artwork Canvas (Project Width &times; Height)</strong>
+                <div style="color: var(--text-muted); font-size: 0.85rem;">Alpha-blends all visible layers of the active frame from bottom to top. Scaled via CSS <code>image-rendering: pixelated</code> (100%–6400%).</div>
+              </div>
+              <code>z-index: 30</code>
+            </div>
+            <div class="canvas-plane">
+              <div>
+                <strong>Plane 2: Onion Skin Canvas (Project Width &times; Height)</strong>
+                <div style="color: var(--text-muted); font-size: 0.85rem;">Displays translucent overlays of 1–3 previous frames (red tint) and 1–3 next frames (blue/cyan tint).</div>
+              </div>
+              <code>z-index: 20</code>
+            </div>
+            <div class="canvas-plane">
+              <div>
+                <strong>Plane 1: Checkerboard Transparency Backdrop (Project Width &times; Height)</strong>
+                <div style="color: var(--text-muted); font-size: 0.85rem;">Cached repeating pattern indicating transparent pixels; only redraws on canvas resize.</div>
+              </div>
+              <code>z-index: 10</code>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4.2 Cel Memory Model -->
+        <div class="feature-block" id="eng-memory">
+          <div class="feature-header">
+            <h3>4.2 Cel Memory Model (<code>[Frame, Layer]</code> Matrix)</h3>
+            <span class="badge">Sparse Typed Arrays</span>
+          </div>
+          <div class="spec-grid">
+            <div class="spec-label">Pixel Representation</div>
+            <div class="spec-value">
+              Each cel is stored as a <code>Uint32Array(width * height)</code> where each element packs a 32-bit RGBA pixel (<code>0xAABBGGRR</code> on little-endian CPUs), sharing its underlying <code>ArrayBuffer</code> directly with <code>ImageData</code>.
+            </div>
+
+            <div class="spec-label">Memory Budget</div>
+            <div class="spec-value">
+              <ul>
+                <li>A single <code>512&times;512</code> cel consumes exactly <code>512 &times; 512 &times; 4 bytes = 1.0 MB</code>.</li>
+                <li><strong>Sparse Allocation</strong>: Empty cels do not allocate a 1MB buffer until a pixel is drawn.</li>
+                <li><strong>Deflate Compression</strong>: When persisted to IndexedDB or PostgreSQL <code>BYTEA</code>, browser-native <code>CompressionStream('deflate-raw')</code> shrinks a 1MB pixel-art cel to <code>10–45 KB</code>.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4.3 Drawing Algorithms -->
+        <div class="feature-block" id="eng-algorithms">
+          <div class="feature-header">
+            <h3>4.3 Pixel-Perfect Drawing &amp; Raster Algorithms</h3>
+            <span class="badge">Integer Grid Math</span>
+          </div>
+          <div class="spec-grid">
+            <div class="spec-label">Pencil &amp; Eraser</div>
+            <div class="spec-value">
+              Interpolates between consecutive pointer events <code>(x0, y0) &rarr; (x1, y1)</code> using <strong>Bresenham's Line Algorithm</strong> and stamps a configurable <code>1px–8px</code> brush mask so fast cursor movement never leaves gaps.
+            </div>
+
+            <div class="spec-label">Shape Tools</div>
+            <div class="spec-value">
+              <ul>
+                <li><strong>Line Tool</strong>: Integer Bresenham line rendered live on Plane 4 during drag, committed to active cel on <code>pointerup</code>.</li>
+                <li><strong>Rectangle Tool</strong>: Axis-aligned outlined or filled box between anchor <code>(x0, y0)</code> and cursor <code>(x1, y1)</code>.</li>
+                <li><strong>Circle Tool</strong>: <strong>Midpoint Circle/Ellipse Algorithm</strong> generating symmetrical, anti-alias-free pixel perimeters.</li>
+              </ul>
+            </div>
+
+            <div class="spec-label">Flood Fill (Bucket)</div>
+            <div class="spec-value">
+              <ul>
+                <li><strong>Contiguous Fill</strong>: Iterative scanline 4-way flood fill backed by a pre-allocated <code>Int32Array</code> ring queue (prevents recursion stack overflow at <code>512&times;512</code>).</li>
+                <li><strong>Global Color Replace</strong>: Single linear pass replacing all matching <code>Uint32</code> color values across the active cel.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4.4 Undo / Redo History Engine -->
+        <div class="feature-block" id="eng-history">
+          <div class="feature-header">
+            <h3>4.4 Command-Pattern Undo / Redo Engine (50+ Steps)</h3>
+            <span class="badge">Delta Patch Stack</span>
+          </div>
+          <p>To support at least 50 sequential undo/redo operations without exhausting memory, the History Manager records compact delta patches per action:</p>
+<pre><code>export type HistoryCommand =
+  | {
+      type: 'CEL_DELTA';
+      celKey: `${string}:${string}`; // `${frameId}:${layerId}`
+      boundingBox: { x: number; y: number; w: number; h: number };
+      beforePatch: Uint32Array;      // Sub-rectangle buffer prior to stroke
+      afterPatch: Uint32Array;       // Sub-rectangle buffer after stroke
+    }
+  | {
+      type: 'PROJECT_STRUCTURE';
+      mutation: 'LAYER_ADD' | 'LAYER_DELETE' | 'LAYER_REORDER' | 'FRAME_ADD' | 'FRAME_DELETE' | 'FRAME_REORDER';
+      beforeState: StructuralSnapshot;
+      afterState: StructuralSnapshot;
+    };</code></pre>
+        </div>
+      </section>
+
+      <!-- 5. Animation & Export Pipeline -->
+      <section id="animation">
+        <h2><span class="sec-num">05</span> Animation &amp; Export Pipeline</h2>
+        <div class="grid-2">
+          <div class="card">
+            <h4>Timeline Playback &amp; Frame Hold Engine</h4>
+            <p>Driven by a high-precision <code>requestAnimationFrame</code> loop. Each frame resolves its duration via:</p>
+            <p><code>durationMs = frame.durationOverrideMs ?? Math.round(1000 / project.fps)</code></p>
+            <ul>
+              <li>Supports <strong>Forward Loop</strong>, <strong>Ping-Pong</strong> (alternating direction), and <strong>Once</strong>.</li>
+              <li>Synchronizes both the main canvas viewport and the floating <code>1x/2x</code> Mini-Preview window.</li>
+              <li>Enforces PRD limits: <code>1–64</code> frames, <code>1–30</code> FPS, <code>20ms–5000ms</code> frame holds.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h4>Client-Side Export Pipeline (PNG, GIF, Sprite Sheet)</h4>
+            <ul>
+              <li><strong>Crisp Scaled PNG (<code>1x, 2x, 4x, 8x, 16x</code>)</strong>: Renders onto an <code>OffscreenCanvas</code> of size <code>(W &times; scale, H &times; scale)</code> with <code>imageSmoothingEnabled = false</code>.</li>
+              <li><strong>PNG Sprite Sheet Packer</strong>: Packs all frames into a <em>Horizontal Strip</em> (<code>(W&times;N) &times; H</code>), <em>Vertical Strip</em> (<code>W &times; (H&times;N)</code>), or balanced <em>Grid Layout</em>.</li>
+              <li><strong>Animated GIF Worker (<code>gifenc</code>)</strong>: Quantizes each composited frame to a 256-color table (reserving 1 transparent index) and encodes frame delays in a background Web Worker.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. Image-to-Pixel Converter Pipeline -->
+      <section id="converter">
+        <h2><span class="sec-num">06</span> Image-to-Pixel Art Converter Pipeline</h2>
+        <p>
+          The converter runs inside a dedicated Web Worker (<code>converter.worker.ts</code>) using <code>image-q</code> so adjusting sliders (Resolution, Color Count, Dithering) updates the split-slider preview in under <code>50ms</code> without blocking the main UI thread.
+        </p>
+
+        <div class="grid-3">
+          <div class="card">
+            <h4>1. Upload &amp; Preserve</h4>
+            <p>Validates magic bytes for <code>PNG</code>, <code>JPG</code>, or <code>WebP</code> (&le;10MB, &le;<code>4096&times;4096</code>). Stores the untouched original file as a separate <code>SOURCE_IMAGE</code> record before any pixel processing occurs.</p>
+          </div>
+          <div class="card">
+            <h4>2. Downsample &amp; Quantize</h4>
+            <p>Applies aspect-aware crop/fit and downsamples to target pixel dimensions (<code>8&times;8</code> to <code>512&times;512</code>). Runs WuQuant / NeuQuant to extract <code>2–64</code> optimal colors or maps to an active project palette.</p>
+          </div>
+          <div class="card">
+            <h4>3. Dither &amp; Import</h4>
+            <p>Applies selectable dithering (<strong>None</strong>, <strong>Bayer Ordered</strong>, or <strong>Floyd-Steinberg</strong>). Importing creates a new project or layer, populates the project palette, and links <code>source_image_id</code> for future re-conversion.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. State Management, Persistence & Guest Migration -->
+      <section id="persistence">
+        <h2><span class="sec-num">07</span> State Management, Auto-Save &amp; Guest Migration</h2>
+        <div class="grid-2">
+          <div class="flow-card" style="background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem;">
+            <h4 style="color: var(--accent-2); margin-bottom: 0.6rem;">Local-First Auto-Save &amp; Cloud Sync</h4>
+            <ol>
+              <li><strong>Immediate Local Write</strong>: Every stroke or layer edit marks touched cels as <code>dirty</code> and writes deflated buffers to IndexedDB (<code>pixaura_local</code> via <code>Dexie.js</code>).</li>
+              <li><strong>30-Second Cloud Sync</strong>: For authenticated users, a debounced background worker batches dirty cels every 30s (or immediately on <code>Ctrl/Cmd + S</code>) to <code>PUT /api/projects/:id/sync</code>.</li>
+              <li><strong>Draft Isolation</strong>: Cloud sync updates only <code>projects</code>, <code>layers</code>, <code>frames</code>, and <code>cels</code>. A linked public <code>POST</code> remains untouched until the user clicks <strong>Update Published Post</strong>.</li>
+            </ol>
+          </div>
+
+          <div class="flow-card" style="background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem;">
+            <h4 style="color: var(--accent-2); margin-bottom: 0.6rem;">Guest-to-Registered Session Migration</h4>
+            <ol>
+              <li><strong>Guest Session</strong>: Unauthenticated visitor draws, animates, or converts an image in <code>/studio</code>. Full project state lives in IndexedDB with <code>isGuestDraft = true</code>.</li>
+              <li><strong>Auth Trigger</strong>: Visitor clicks <strong>Save to Cloud</strong> or <strong>Publish</strong> and completes <code>/login</code> or <code>/register</code>.</li>
+              <li><strong>Automatic Migration Hook</strong>: On auth redirect, client detects <code>isGuestDraft</code>, posts the payload to <code>POST /api/projects/migrate</code>, and transitions seamlessly to <code>/studio/:newProjectId</code>.</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. Database Schema & Storage Design -->
+      <section id="database">
+        <h2><span class="sec-num">08</span> Database Schema &amp; Storage Design (PostgreSQL)</h2>
+        <p>
+          PostgreSQL 16 enforces strict constraints matching the PRD rules (canvas bounds <code>8–512</code>, max 16 layers, max 64 frames, composite unique keys on Likes, Bookmarks, and Follows).
+        </p>
+
+        <div class="entity-grid">
+          <div class="entity-box">
+            <div class="entity-title"><span>users</span><span>Identity</span></div>
+            <ul class="entity-fields">
+              <li><span>id</span><span class="pk">UUID PK</span></li>
+              <li><span>username</span><span class="col-type">VARCHAR(24) UNIQUE</span></li>
+              <li><span>email</span><span class="col-type">VARCHAR(255) UNIQUE</span></li>
+              <li><span>password_hash</span><span class="col-type">TEXT</span></li>
+              <li><span>display_name</span><span class="col-type">VARCHAR(50)</span></li>
+              <li><span>avatar_url, bio</span><span class="col-type">TEXT / VARCHAR(160)</span></li>
+              <li><span>email_verified_at</span><span class="col-type">TIMESTAMPTZ</span></li>
+            </ul>
+          </div>
+
+          <div class="entity-box">
+            <div class="entity-title"><span>projects</span><span>Workspace</span></div>
+            <ul class="entity-fields">
+              <li><span>id</span><span class="pk">UUID PK</span></li>
+              <li><span>user_id</span><span class="fk">FK &rarr; users.id</span></li>
+              <li><span>source_image_id</span><span class="fk">FK &rarr; source_images.id?</span></li>
+              <li><span>title</span><span class="col-type">VARCHAR(80)</span></li>
+              <li><span>width, height</span><span class="col-type">INT (8..512)</span></li>
+              <li><span>fps</span><span class="col-type">INT (1..30)</span></li>
+              <li><span>palette_colors</span><span class="col-type">JSONB (max 256)</span></li>
+              <li><span>status</span><span class="col-type">draft | published</span></li>
+            </ul>
+          </div>
+
+          <div class="entity-box">
+            <div class="entity-title"><span>layers / frames / cels</span><span>Pixel Matrix</span></div>
+            <ul class="entity-fields">
+              <li><span>layers.id</span><span class="pk">PK (order 0..15)</span></li>
+              <li><span>layers.opacity, flags</span><span class="col-type">0..100, visible, locked</span></li>
+              <li><span>frames.id</span><span class="pk">PK (order 0..63)</span></li>
+              <li><span>frames.duration_ms</span><span class="col-type">INT (20..5000 nullable)</span></li>
+              <li><span>cels.frame_id + layer_id</span><span class="pk">UNIQUE (FKs)</span></li>
+              <li><span>cels.pixel_data</span><span class="col-type">BYTEA (Deflate RGBA)</span></li>
+            </ul>
+          </div>
+
+          <div class="entity-box">
+            <div class="entity-title"><span>source_images</span><span>Preserved Asset</span></div>
+            <ul class="entity-fields">
+              <li><span>id</span><span class="pk">UUID PK</span></li>
+              <li><span>user_id</span><span class="fk">FK &rarr; users.id</span></li>
+              <li><span>original_file_url</span><span class="col-type">TEXT (Immutable R2 URL)</span></li>
+              <li><span>original_width, height</span><span class="col-type">INT (1..4096)</span></li>
+              <li><span>file_size_bytes</span><span class="col-type">INT (&le; 10,485,760)</span></li>
+              <li><span>last_conversion_settings</span><span class="col-type">JSONB</span></li>
+            </ul>
+          </div>
+
+          <div class="entity-box">
+            <div class="entity-title"><span>posts</span><span>Public Gallery</span></div>
+            <ul class="entity-fields">
+              <li><span>id</span><span class="pk">UUID PK</span></li>
+              <li><span>project_id</span><span class="fk">FK &rarr; projects.id?</span></li>
+              <li><span>user_id</span><span class="fk">FK &rarr; users.id</span></li>
+              <li><span>title, description</span><span class="col-type">VARCHAR(80) / (1000)</span></li>
+              <li><span>category, is_animated</span><span class="col-type">VARCHAR(32), BOOL</span></li>
+              <li><span>preview_asset_url</span><span class="col-type">TEXT (PNG / GIF)</span></li>
+              <li><span>like_count, comment_count</span><span class="col-type">INT</span></li>
+            </ul>
+          </div>
+
+          <div class="entity-box">
+            <div class="entity-title"><span>social &amp; tags</span><span>Community Graph</span></div>
+            <ul class="entity-fields">
+              <li><span>comments</span><span class="col-type">id, post_id, user_id, body(500)</span></li>
+              <li><span>likes</span><span class="pk">PK (user_id, post_id)</span></li>
+              <li><span>bookmarks</span><span class="pk">PK (user_id, post_id)</span></li>
+              <li><span>follows</span><span class="pk">PK (follower_id, following_id)</span></li>
+              <li><span>tags &amp; post_tags</span><span class="pk">PK (post_id, tag_id)</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9. API Endpoints & Contracts -->
+      <section id="api">
+        <h2><span class="sec-num">09</span> API Endpoints &amp; Contracts</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Endpoint</th>
+                <th>Auth</th>
+                <th>Purpose &amp; Validation Rules</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="method m-get">GET</span></td>
+                <td><code>/api/projects</code></td>
+                <td>User</td>
+                <td>Fetch personal workspace tabs: Drafts, Published Projects, Saved Source Images, or Bookmarks.</td>
+              </tr>
+              <tr>
+                <td><span class="method m-post">POST</span></td>
+                <td><code>/api/projects</code></td>
+                <td>User</td>
+                <td>Create a new cloud project (validates dimensions <code>8–512</code> and max 50 drafts per free account).</td>
+              </tr>
+              <tr>
+                <td><span class="method m-put">PUT</span></td>
+                <td><code>/api/projects/:id/sync</code></td>
+                <td>Owner</td>
+                <td>Batch upsert project metadata, layers, frames, and deflated <code>BYTEA</code> cels.</td>
+              </tr>
+              <tr>
+                <td><span class="method m-post">POST</span></td>
+                <td><code>/api/projects/migrate</code></td>
+                <td>User</td>
+                <td>Migrate guest IndexedDB draft + source image into newly authenticated user's cloud workspace.</td>
+              </tr>
+              <tr>
+                <td><span class="method m-post">POST</span></td>
+                <td><code>/api/upload/source-image</code></td>
+                <td>User</td>
+                <td>Validate magic bytes (<code>PNG/JPG/WebP</code> &le;10MB) and persist immutable <code>SOURCE_IMAGE</code>.</td>
+              </tr>
+              <tr>
+                <td><span class="method m-get">GET</span></td>
+                <td><code>/api/posts</code></td>
+                <td>Public</td>
+                <td>Cursor-paginated Explore feed supporting <code>sort=trending|recent|following</code>, <code>category</code>, <code>tag</code>, <code>format</code>, and search <code>q</code>.</td>
+              </tr>
+              <tr>
+                <td><span class="method m-post">POST</span></td>
+                <td><code>/api/posts</code></td>
+                <td>Verified</td>
+                <td>Publish snapshot of a project (uploads rendered PNG/GIF, validates title <code>3–80</code> chars and &le;5 tags).</td>
+              </tr>
+              <tr>
+                <td><span class="method m-put">PUT</span></td>
+                <td><code>/api/posts/:postId</code></td>
+                <td>Owner</td>
+                <td>Update metadata or push a fresh project snapshot (<strong>Update Published Post</strong>).</td>
+              </tr>
+              <tr>
+                <td><span class="method m-post">POST</span></td>
+                <td><code>/api/posts/:postId/like</code></td>
+                <td>Verified</td>
+                <td>Idempotent toggle Like (<code>ON CONFLICT DO NOTHING</code> / <code>DELETE</code>) + atomic counter increment/decrement.</td>
+              </tr>
+              <tr>
+                <td><span class="method m-post">POST</span></td>
+                <td><code>/api/posts/:postId/comments</code></td>
+                <td>Verified</td>
+                <td>Post plain-text comment (<code>1–500</code> chars, HTML stripped, rate-limited to <code>5/min/user</code>).</td>
+              </tr>
+              <tr>
+                <td><span class="method m-post">POST</span></td>
+                <td><code>/api/users/:username/follow</code></td>
+                <td>Verified</td>
+                <td>Idempotent toggle Follow (enforces <code>follower_id !== following_id</code>).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 10. Security, Validation & Performance Budgets -->
+      <section id="security">
+        <h2><span class="sec-num">10</span> Security, Validation &amp; Performance Budgets</h2>
+        <div class="grid-2">
+          <div class="card">
+            <h4>Security &amp; Access Control</h4>
+            <ul>
+              <li><strong>Magic-Byte File Inspection</strong>: Rejects disguised executables by verifying raw binary signatures for PNG, JPEG, and WebP before decoding image dimensions.</li>
+              <li><strong>Strict Plain-Text Sanitization</strong>: Comments and bios are rendered as text nodes; zero raw HTML/Markdown injection vectors.</li>
+              <li><strong>Ownership Guardrails</strong>: Draft projects and reference images are strictly isolated to <code>project.user_id</code>; comments can be deleted by either the comment author or the post owner.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h4>Performance Budgets</h4>
+            <ul>
+              <li><strong>Pointer-to-Pixel Latency (&lt; 8ms)</strong>: Direct <code>Uint32Array</code> writes + dirty-rect <code>putImageData</code> bypass React reconciliation during active brush strokes.</li>
+              <li><strong>Converter Live Preview (&lt; 100ms)</strong>: Off-main-thread Web Worker caches the cropped source bitmap and re-runs quantization smoothly as sliders move.</li>
+              <li><strong>Crisp Gallery Rendering (LCP &lt; 1.5s)</strong>: Server-rendered feed cards with <code>image-rendering: pixelated</code> and viewport-triggered animation playback.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 11. Phased Implementation Roadmap -->
+      <section id="roadmap">
+        <h2><span class="sec-num">11</span> Phased Implementation Roadmap</h2>
+        <div class="grid-2">
+          <div class="card">
+            <div style="margin-bottom: 0.6rem;"><span class="scope-pill pill-phase">Phase 1: Core Studio Engine</span></div>
+            <ul>
+              <li>Scaffold Next.js 15 + TypeScript + Tailwind CSS + Zustand.</li>
+              <li>Build 4-plane <code>CanvasStage</code>, <code>Uint32Array</code> cel model, zoom/pan viewport, checkerboard, and <code>1x/2x</code> Mini-Preview.</li>
+              <li>Implement all 7 tools (Pencil, Eraser, Flood Fill, Eyedropper, Line, Rectangle, Circle), Layer Panel (16 layers), 50-step Undo/Redo, IndexedDB local save, and scaled PNG export.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div style="margin-bottom: 0.6rem;"><span class="scope-pill pill-phase">Phase 2: Animation &amp; Converter</span></div>
+            <ul>
+              <li>Build collapsible Timeline Drawer (up to 64 frames, frame hold overrides, <code>1–30</code> FPS playback loop, and Onion Skinning).</li>
+              <li>Implement <code>gifenc</code> GIF export worker and PNG Sprite Sheet packer.</li>
+              <li>Build <code>converter.worker.ts</code> with <code>image-q</code> quantization, Bayer/Floyd-Steinberg dithering, split-slider preview, and non-destructive <code>SOURCE_IMAGE</code> storage.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div style="margin-bottom: 0.6rem;"><span class="scope-pill pill-phase">Phase 3: Auth &amp; Cloud Workspace</span></div>
+            <ul>
+              <li>Provision PostgreSQL + Drizzle ORM schema and R2/Supabase Storage buckets.</li>
+              <li>Implement Auth (<code>/login</code>, <code>/register</code>, email verification) and automatic Guest-to-Cloud project migration.</li>
+              <li>Build <code>/workspace</code> dashboard (Drafts, Published, Reference Assets, Bookmarks) and 30s background cloud sync.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div style="margin-bottom: 0.6rem;"><span class="scope-pill pill-phase">Phase 4: Community Gallery &amp; Social</span></div>
+            <ul>
+              <li>Build Publish Modal, snapshot renderer, and Update/Unpublish flows.</li>
+              <li>Build Explore Feed (<code>/</code>) with Trending gravity sort, category/tag/format filters, and search.</li>
+              <li>Build Artwork Detail (<code>/art/:postId</code>) and Creator Profile (<code>/u/:username</code>) with Likes, Bookmarks, rate-limited Comments, and Follows.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const toggleBtn = document.getElementById('themeToggle');
+    toggleBtn.addEventListener('click', () => {
+      const html = document.documentElement;
+      const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+    });
+  </script>
+</body>
+</html>

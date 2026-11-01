@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pixaura — Product Requirements Document (PRD)</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --bg-surface: #161922;
+      --bg-elevated: #1e2230;
+      --border: #2a3042;
+      --text: #e6e9f0;
+      --text-muted: #9aa3b8;
+      --accent: #7c5cff;
+      --accent-soft: rgba(124, 92, 255, 0.14);
+      --accent-2: #22d3ee;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --code-bg: #12151e;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-elevated: #f1f5f9;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --accent: #6344f5;
+      --accent-soft: rgba(99, 68, 245, 0.1);
+      --accent-2: #0891b2;
+      --success: #059669;
+      --warning: #d97706;
+      --code-bg: #f1f5f9;
+      --shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      font-size: 15px;
+    }
+
+    /* Header */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+    }
+
+    .pixel-logo {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border-radius: 6px;
+      display: inline-grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      padding: 4px;
+    }
+
+    .pixel-logo span {
+      background: #fff;
+      border-radius: 1px;
+    }
+
+    .pixel-logo span:nth-child(2),
+    .pixel-logo span:nth-child(4),
+    .pixel-logo span:nth-child(6),
+    .pixel-logo span:nth-child(8) {
+      opacity: 0.35;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid rgba(124, 92, 255, 0.3);
+    }
+
+    .theme-btn {
+      background: var(--bg-elevated);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.45rem 0.85rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: border-color 0.15s ease;
+    }
+
+    .theme-btn:hover {
+      border-color: var(--accent);
+    }
+
+    /* Layout */
+    .layout {
+      max-width: 1320px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 2.5rem;
+      padding: 2rem;
+    }
+
+    /* Sidebar TOC */
+    .sidebar {
+      position: sticky;
+      top: 4.5rem;
+      height: calc(100vh - 6rem);
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    .toc-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .toc-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .toc-list a {
+      display: block;
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      padding: 0.4rem 0.65rem;
+      border-radius: 6px;
+      border-left: 2px solid transparent;
+      transition: all 0.15s ease;
+    }
+
+    .toc-list a:hover {
+      color: var(--text);
+      background: var(--bg-elevated);
+      border-left-color: var(--accent);
+    }
+
+    .toc-sub {
+      padding-left: 1rem;
+      font-size: 0.82rem !important;
+    }
+
+    /* Main Content */
+    main {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+
+    .hero-card {
+      background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-elevated) 100%);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card h1 {
+      font-size: 1.9rem;
+      line-height: 1.25;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-card p {
+      color: var(--text-muted);
+      font-size: 1.02rem;
+      max-width: 78ch;
+    }
+
+    section {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem 2rem;
+      box-shadow: var(--shadow);
+      scroll-margin-top: 4.75rem;
+    }
+
+    h2 {
+      font-size: 1.35rem;
+      margin-bottom: 1.15rem;
+      padding-bottom: 0.65rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .sec-num {
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 0.15rem 0.55rem;
+      border-radius: 6px;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      margin: 1.25rem 0 0.6rem;
+      color: var(--text);
+    }
+
+    p {
+      margin-bottom: 0.85rem;
+    }
+
+    ul, ol {
+      padding-left: 1.35rem;
+      margin-bottom: 0.85rem;
+    }
+
+    li {
+      margin-bottom: 0.35rem;
+    }
+
+    code {
+      font-family: "JetBrains Mono", Consolas, Monaco, monospace;
+      font-size: 0.84em;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      padding: 0.12rem 0.4rem;
+      border-radius: 4px;
+      color: var(--accent-2);
+    }
+
+    /* Grid Cards */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-top: 0.75rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.25rem;
+      margin-top: 0.75rem;
+    }
+
+    .card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.15rem;
+    }
+
+    .card h4 {
+      font-size: 0.98rem;
+      margin-bottom: 0.45rem;
+      color: var(--accent-2);
+    }
+
+    /* Feature Blocks */
+    .feature-block {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.35rem 1.5rem;
+      margin-bottom: 1.25rem;
+      scroll-margin-top: 4.75rem;
+    }
+
+    .feature-block:last-child {
+      margin-bottom: 0;
+    }
+
+    .feature-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .feature-header h3 {
+      margin: 0;
+      font-size: 1.15rem;
+    }
+
+    .spec-grid {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 0.75rem 1.25rem;
+    }
+
+    .spec-label {
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      padding-top: 0.1rem;
+    }
+
+    .spec-value ul {
+      margin-bottom: 0;
+    }
+
+    /* Tables */
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 0.5rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 0.75rem 0.9rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--bg-elevated);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Flows */
+    .flow-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.15rem 1.35rem;
+    }
+
+    .flow-card h4 {
+      margin-bottom: 0.65rem;
+      color: var(--text);
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .flow-card ol {
+      margin-bottom: 0;
+      color: var(--text-muted);
+    }
+
+    .flow-card ol li strong {
+      color: var(--text);
+    }
+
+    /* Entity Schema Cards */
+    .entity-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .entity-box {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .entity-title {
+      background: var(--code-bg);
+      padding: 0.55rem 0.9rem;
+      font-weight: 700;
+      font-family: "JetBrains Mono", Consolas, monospace;
+      font-size: 0.88rem;
+      color: var(--accent-2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .entity-fields {
+      list-style: none;
+      padding: 0.65rem 0.9rem;
+      margin: 0;
+      font-size: 0.84rem;
+    }
+
+    .entity-fields li {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.2rem 0;
+      border-bottom: 1px dashed rgba(154, 163, 184, 0.15);
+    }
+
+    .entity-fields li:last-child {
+      border-bottom: none;
+    }
+
+    .pk { color: var(--warning); font-weight: 600; font-size: 0.75rem; }
+    .fk { color: var(--accent); font-weight: 600; font-size: 0.75rem; }
+
+    .scope-pill {
+      display: inline-block;
+      padding: 0.15rem 0.55rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .pill-mvp {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .pill-future {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--warning);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    @media (max-width: 960px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        display: none;
+      }
+      .spec-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="pixel-logo" aria-hidden="true">
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+      </div>
+      <span>Pixaura PRD</span>
+      <span class="badge">v1.0 Specification</span>
+    </div>
+    <button class="theme-btn" id="themeToggle" type="button">Toggle Light / Dark</button>
+  </header>
+
+  <div class="layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="toc-title">Contents</div>
+      <ul class="toc-list">
+        <li><a href="#vision">1. Vision &amp; Goals</a></li>
+        <li><a href="#users">2. Target Users</a></li>
+        <li><a href="#features">3. Core Features</a></li>
+        <li><a href="#feat-editor" class="toc-sub">3.1 Pixel Art Editor</a></li>
+        <li><a href="#feat-animation" class="toc-sub">3.2 Animation Editor</a></li>
+        <li><a href="#feat-converter" class="toc-sub">3.3 Image Converter</a></li>
+        <li><a href="#feat-community" class="toc-sub">3.4 Community</a></li>
+        <li><a href="#feat-management" class="toc-sub">3.5 Project Management</a></li>
+        <li><a href="#screens">4. Pages &amp; Screens</a></li>
+        <li><a href="#navigation">5. Navigation Structure</a></li>
+        <li><a href="#flows">6. Main User Flows</a></li>
+        <li><a href="#data">7. Data Entities &amp; Schema</a></li>
+        <li><a href="#rules">8. Business Rules</a></li>
+        <li><a href="#scope">9. MVP vs. Future Scope</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Document -->
+    <main>
+      <div class="hero-card">
+        <h1>Product Requirements Document: Pixaura</h1>
+        <p>
+          A project-centric pixel art and frame-by-frame animation web application that unifies static drawing, non-destructive image-to-pixel conversion, and animation into a single distraction-free workspace, paired with a gallery-first creator community.
+        </p>
+      </div>
+
+      <!-- 1. Product Vision and Goals -->
+      <section id="vision">
+        <h2><span class="sec-num">01</span> Product Vision and Goals</h2>
+        <div class="grid-3">
+          <div class="card">
+            <h4>Unified Creative Workflow</h4>
+            <p>Eliminate context switching by housing static drawing, frame-by-frame animation, and non-destructive image conversion inside a single project structure.</p>
+          </div>
+          <div class="card">
+            <h4>Low Friction, High Control</h4>
+            <p>Allow guest and registered users to start drawing immediately with intuitive defaults while offering layer management, onion skinning, and custom palettes for experienced artists.</p>
+          </div>
+          <div class="card">
+            <h4>Gallery-First Community</h4>
+            <p>Focus social features strictly on artwork discovery, appreciation, and creative inspiration rather than chat rooms, forums, or cluttered social feeds.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. Target Users -->
+      <section id="users">
+        <h2><span class="sec-num">02</span> Target Users</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Segment</th>
+                <th>Description</th>
+                <th>Core Needs</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Hobbyist &amp; Beginner Pixel Artists</strong></td>
+                <td>Casual creators learning pixel art or making avatars and icons.</td>
+                <td>Clean UI, preset canvas sizes, image-to-pixel starting points, easy PNG/GIF export.</td>
+              </tr>
+              <tr>
+                <td><strong>Indie Game Developers &amp; Animators</strong></td>
+                <td>Creators building 2D game sprites, tiles, and frame-by-frame animations.</td>
+                <td>Layer support, frame timing control, onion skinning, sprite sheet export, custom palettes.</td>
+              </tr>
+              <tr>
+                <td><strong>Pixel Art Enthusiasts</strong></td>
+                <td>Community members who browse, collect inspiration, and support artists.</td>
+                <td>Tag/category filtering, crisp artwork detail views, bookmarks, and creator following.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 3. Core Features -->
+      <section id="features">
+        <h2><span class="sec-num">03</span> Core Features and Functional Requirements</h2>
+
+        <!-- 3.1 Pixel Art Editor -->
+        <div class="feature-block" id="feat-editor">
+          <div class="feature-header">
+            <h3>3.1 Pixel Art Editor</h3>
+            <span class="badge">Core Studio</span>
+          </div>
+          <div class="spec-grid">
+            <div class="spec-label">What It Does</div>
+            <div class="spec-value">Provides a grid-based raster canvas for creating and editing multi-layer pixel artwork.</div>
+
+            <div class="spec-label">What Users Can Do</div>
+            <div class="spec-value">
+              <ul>
+                <li>Create a project from preset dimensions (<code>16x16</code>, <code>32x32</code>, <code>64x64</code>, <code>128x128</code>) or custom dimensions.</li>
+                <li>Draw with core tools: <strong>Pencil</strong> (1–8px), <strong>Eraser</strong>, <strong>Fill Bucket</strong> (contiguous or global), <strong>Eyedropper</strong>, and <strong>Shape Tools</strong> (Line, Rectangle, Circle — outlined or filled).</li>
+                <li>Manage colors via an active palette: add/remove swatches, pick custom Hex/RGB/HSL values, and switch preset palettes.</li>
+                <li>Navigate via Zoom (<code>100%–6400%</code>), Pan (spacebar + drag / middle-click), Pixel Grid Toggle, and a floating 1x/2x live Mini-Preview window.</li>
+                <li>Manage layers: create, rename, duplicate, delete, reorder, toggle visibility, lock, and adjust opacity (<code>0–100%</code>).</li>
+                <li>Undo and Redo actions across drawing and layer operations.</li>
+                <li>Save project state (cloud save for logged-in users; local browser storage for guests) and export PNG at integer scales (<code>1x, 2x, 4x, 8x, 16x</code>).</li>
+              </ul>
+            </div>
+
+            <div class="spec-label">Expected Behavior</div>
+            <div class="spec-value">
+              <ul>
+                <li>Drawing operations apply strictly to the currently selected unlocked, visible layer of the active frame.</li>
+                <li>Shape tools render a live pixel-perfect preview overlay while dragging and commit pixels on pointer release.</li>
+                <li>Exports scale using nearest-neighbor interpolation with zero blurring or anti-aliasing.</li>
+              </ul>
+            </div>
+
+            <div class="spec-label">Constraints &amp; Rules</div>
+            <div class="spec-value">
+              <ul>
+                <li>Canvas width &amp; height: min <code>8px</code>, max <code>512px</code> per dimension.</li>
+                <li>Maximum layers per project: <code>16</code>.</li>
+                <li>Undo/Redo history stack: minimum <code>50</code> sequential actions per session.</li>
+                <li>Palette limit: <code>256</code> colors per project palette.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3.2 Animation Editor -->
+        <div class="feature-block" id="feat-animation">
+          <div class="feature-header">
+            <h3>3.2 Animation Editor</h3>
+            <span class="badge">Core Studio</span>
+          </div>
+          <div class="spec-grid">
+            <div class="spec-label">What It Does</div>
+            <div class="spec-value">Extends the Pixel Art Editor with a collapsible timeline drawer for frame-by-frame animation and playback.</div>
+
+            <div class="spec-label">What Users Can Do</div>
+            <div class="spec-value">
+              <ul>
+                <li>Toggle the animation timeline drawer inside the editor without leaving the project.</li>
+                <li>Add blank frames, duplicate existing frames, delete frames, and drag-and-drop to reorder frames.</li>
+                <li>Adjust global playback speed (FPS) and set per-frame duration overrides in milliseconds.</li>
+                <li>Enable <strong>Onion Skinning</strong> to display translucent overlays of adjacent frames (1–3 frames backward/forward).</li>
+                <li>Play, pause, loop (forward, ping-pong, once), and scrub through frames in real time.</li>
+                <li>Export animations as an animated <strong>GIF</strong> or a <strong>PNG Sprite Sheet</strong> (horizontal strip, vertical strip, or grid).</li>
+              </ul>
+            </div>
+
+            <div class="spec-label">Expected Behavior</div>
+            <div class="spec-value">
+              <ul>
+                <li>Layer hierarchy is shared across all frames, while pixel cel content is unique to each <code>[Frame, Layer]</code> intersection.</li>
+                <li>Adding a second frame to a static project seamlessly enables animation mode without data loss.</li>
+              </ul>
+            </div>
+
+            <div class="spec-label">Constraints &amp; Rules</div>
+            <div class="spec-value">
+              <ul>
+                <li>Maximum frames per project: <code>64</code> frames.</li>
+                <li>Global FPS range: <code>1</code> to <code>30</code> FPS.</li>
+                <li>Per-frame duration override: <code>20ms</code> to <code>5000ms</code>.</li>
+                <li>Deleting a frame is disabled when only <code>1</code> frame remains.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3.3 Image-to-Pixel Art Converter -->
+        <div class="feature-block" id="feat-converter">
+          <div class="feature-header">
+            <h3>3.3 Image-to-Pixel Art Converter</h3>
+            <span class="badge">Conversion Pipeline</span>
+          </div>
+          <div class="spec-grid">
+            <div class="spec-label">What It Does</div>
+            <div class="spec-value">Converts uploaded raster images into quantized, downscaled pixel art that can be edited directly as a project layer.</div>
+
+            <div class="spec-label">What Users Can Do</div>
+            <div class="spec-value">
+              <ul>
+                <li>Upload a source image (<code>PNG</code>, <code>JPG</code>, <code>WebP</code>) via file picker or drag-and-drop.</li>
+                <li>Configure target pixel resolution, color count (<code>2–64</code> colors) or target palette, pixelation intensity, and dithering mode (None, Bayer/Ordered, Floyd-Steinberg).</li>
+                <li>Compare changes in a live side-by-side or split-slider preview before applying.</li>
+                <li>Import the converted result as a <strong>new project</strong> or as a <strong>new layer</strong> in the active project.</li>
+                <li>Access the preserved original source image separately as a reference overlay or to re-run conversion with different parameters later.</li>
+              </ul>
+            </div>
+
+            <div class="spec-label">Expected Behavior</div>
+            <div class="spec-value">
+              <ul>
+                <li>Adjusting sliders recalculates the preview non-destructively from the preserved original image.</li>
+                <li>Importing into the editor automatically populates the project palette with the quantized colors.</li>
+              </ul>
+            </div>
+
+            <div class="spec-label">Constraints &amp; Rules</div>
+            <div class="spec-value">
+              <ul>
+                <li>Supported formats: <code>image/png</code>, <code>image/jpeg</code>, <code>image/webp</code>.</li>
+                <li>Maximum file upload size: <code>10 MB</code>; max source dimensions: <code>4096 x 4096 px</code>.</li>
+                <li>Converted output resolution must fall within editor limits (<code>8x8</code> to <code>512x512</code>).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3.4 Community -->
+        <div class="feature-block" id="feat-community">
+          <div class="feature-header">
+            <h3>3.4 Community &amp; Discovery</h3>
+            <span class="badge">Gallery &amp; Social</span>
+          </div>
+          <div class="spec-grid">
+            <div class="spec-label">What It Does</div>
+            <div class="spec-value">Enables creators to publish finished artwork/animations to a public gallery and discover other creators' work.</div>
+
+            <div class="spec-label">What Users Can Do</div>
+            <div class="spec-value">
+              <ul>
+                <li>Publish a project with Title, Description, Category, and up to 5 Tags.</li>
+                <li>Explore feeds sorted by <strong>Trending</strong>, <strong>Recent</strong>, or <strong>Following</strong>.</li>
+                <li>Search and filter artwork by keyword, category, tags, and format (<code>All</code>, <code>Static Art</code>, <code>Animations</code>).</li>
+                <li>View the <strong>Artwork Detail Page</strong> with crisp integer scaling, animation playback controls, extracted color palette swatches, and creator info.</li>
+                <li>Like, Comment on, and Bookmark posts; Follow other creators.</li>
+              </ul>
+            </div>
+
+            <div class="spec-label">Expected Behavior</div>
+            <div class="spec-value">
+              <ul>
+                <li>Publishing creates a public snapshot post. Subsequent edits to the workspace project remain private drafts until the owner clicks "Update Published Post".</li>
+              </ul>
+            </div>
+
+            <div class="spec-label">Constraints &amp; Rules</div>
+            <div class="spec-value">
+              <ul>
+                <li>Authentication required for publishing, liking, commenting, bookmarking, and following.</li>
+                <li>Title: required, <code>3–80</code> chars; Description: optional, max <code>1,000</code> chars; Tags: max <code>5</code> tags (<code>2–24</code> chars each).</li>
+                <li>Comments: plain text only, <code>1–500</code> chars, rate-limited to <code>5</code> per minute per user.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3.5 User and Project Management -->
+        <div class="feature-block" id="feat-management">
+          <div class="feature-header">
+            <h3>3.5 User and Project Management</h3>
+            <span class="badge">Workspace &amp; Auth</span>
+          </div>
+          <div class="spec-grid">
+            <div class="spec-label">What It Does</div>
+            <div class="spec-value">Manages user authentication, personal project workspaces, draft lifecycles, and public creator profiles.</div>
+
+            <div class="spec-label">What Users Can Do</div>
+            <div class="spec-value">
+              <ul>
+                <li>Register, log in, log out, and manage account settings.</li>
+                <li>Manage Drafts, Published Projects, Saved Source Images, and Bookmarks from the <strong>Personal Workspace</strong>.</li>
+                <li>Edit metadata, unpublish (revert to draft), or delete published posts.</li>
+                <li>Customize public creator profile (display name, avatar, bio) showcasing published creations.</li>
+              </ul>
+            </div>
+
+            <div class="spec-label">Expected Behavior</div>
+            <div class="spec-value">
+              <ul>
+                <li>When a guest user registers or logs in from the Studio, any active local project is automatically migrated to their cloud workspace.</li>
+              </ul>
+            </div>
+
+            <div class="spec-label">Constraints &amp; Rules</div>
+            <div class="spec-value">
+              <ul>
+                <li>Username: unique, <code>3–24</code> characters (alphanumeric, <code>_</code>, <code>-</code>).</li>
+                <li>Bio: max <code>160</code> characters.</li>
+                <li>Maximum saved cloud projects per free account: <code>50</code>.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Main Pages and Screen Descriptions -->
+      <section id="screens">
+        <h2><span class="sec-num">04</span> Main Pages and Screen Descriptions</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Screen / Route</th>
+                <th>Purpose &amp; Key UI Components</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Landing / Explore</strong><br><code>/</code></td>
+                <td>Public entry point. Global header, quick-start CTA buttons ("Start Drawing", "Convert Image"), filter bar (Categories, Tags, Format, Sort: Trending/Recent/Following), and responsive gallery grid of pixel art cards.</td>
+              </tr>
+              <tr>
+                <td><strong>Unified Studio Editor</strong><br><code>/studio</code> &amp; <code>/studio/:projectId</code></td>
+                <td>Distraction-free full-viewport workspace:<br>
+                  • <strong>Top Bar</strong>: Project title, Converter launcher, Undo/Redo, Zoom, Save status, Export, Publish.<br>
+                  • <strong>Left Dock</strong>: 7 drawing tools &amp; tool-specific options.<br>
+                  • <strong>Center Viewport</strong>: Interactive checkerboard canvas.<br>
+                  • <strong>Right Dock</strong>: Live Mini-Preview, Color Palette swatches, Layers list.<br>
+                  • <strong>Bottom Drawer</strong>: Collapsible Animation Timeline, frame thumbnails, FPS &amp; Onion Skin controls.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Image Converter View</strong><br><code>/studio?mode=convert</code></td>
+                <td>Integrated modal/drawer inside the Studio. Left: upload dropzone &amp; cropper. Right: live pixel-art preview and sliders (Resolution, Color Count, Palette, Dithering) with "Create Project" and "Insert as Layer" actions.</td>
+              </tr>
+              <tr>
+                <td><strong>Artwork Detail Page</strong><br><code>/art/:postId</code></td>
+                <td>Centered showcase stage with crisp integer scaling, animation playback bar, extracted color palette swatches, creator card with Follow button, Like/Bookmark buttons, tags, and comment thread.</td>
+              </tr>
+              <tr>
+                <td><strong>Personal Workspace</strong><br><code>/workspace</code></td>
+                <td>Private dashboard with tabs for <strong>Projects</strong> (All, Drafts, Published), <strong>Reference Assets</strong> (preserved original images), and <strong>Bookmarks</strong>.</td>
+              </tr>
+              <tr>
+                <td><strong>Creator Profile</strong><br><code>/u/:username</code></td>
+                <td>Public creator header (Avatar, Display Name, <code>@username</code>, Bio, Follower/Following stats, Follow CTA) and portfolio grid of published works.</td>
+              </tr>
+              <tr>
+                <td><strong>Auth &amp; Settings</strong><br><code>/login</code>, <code>/register</code>, <code>/settings</code></td>
+                <td>Authentication views and profile/account management forms.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 5. Navigation Structure -->
+      <section id="navigation">
+        <h2><span class="sec-num">05</span> Navigation Structure</h2>
+        <p>The application separates browsing navigation from studio creation so the editor remains uncluttered:</p>
+        <ul>
+          <li><strong>Global Header (Community &amp; Dashboard pages)</strong>: Brand Logo (links to <code>/</code>), Search Input, Primary CTA (<code>+ Create</code> &rarr; <code>/studio</code>), <code>Workspace</code> link, and User Profile Menu.</li>
+          <li><strong>Studio Header (Compact Mode in <code>/studio</code>)</strong>: Collapses global navigation into a minimal home menu button so over 90% of the viewport is dedicated to the canvas, layers, palette, and timeline.</li>
+        </ul>
+        <div class="grid-3">
+          <div class="card">
+            <h4>Public Discovery</h4>
+            <p><code>/</code> (Explore) &rarr; <code>/art/:postId</code> (Artwork Detail) &rarr; <code>/u/:username</code> (Creator Profile)</p>
+          </div>
+          <div class="card">
+            <h4>Creation Pipeline</h4>
+            <p><code>/studio</code> &harr; Converter Modal &rarr; Export Modal (PNG/GIF/Sprite) or Publish Modal &rarr; <code>/art/:postId</code></p>
+          </div>
+          <div class="card">
+            <h4>Personal Management</h4>
+            <p><code>/workspace</code> (Drafts, Published, Reference Assets, Bookmarks) &rarr; <code>/studio/:projectId</code></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. Main User Flows -->
+      <section id="flows">
+        <h2><span class="sec-num">06</span> Main User Flows</h2>
+        <div class="grid-2">
+          <div class="flow-card">
+            <h4>1. Creating First Pixel Art (New User)</h4>
+            <ol>
+              <li>User lands on <code>/</code> and clicks <strong>Start Drawing</strong> (no account required).</li>
+              <li>Studio opens with a <code>32x32</code> canvas and default starter palette.</li>
+              <li>User draws with Pencil, Fill Bucket, and Shapes across 2 layers.</li>
+              <li>User clicks <strong>Export &rarr; PNG (8x)</strong> for instant download, or clicks <strong>Save</strong> to register and auto-migrate the canvas to their cloud workspace.</li>
+            </ol>
+          </div>
+
+          <div class="flow-card">
+            <h4>2. Converting an Image to Pixel Art</h4>
+            <ol>
+              <li>User opens <strong>Convert Image</strong> and uploads a <code>PNG/JPG/WebP</code> file.</li>
+              <li>System stores the raw image separately and shows a live split preview.</li>
+              <li>User adjusts target resolution (<code>96x96</code>), color count (<code>24</code>), and dithering.</li>
+              <li>User clicks <strong>Import to Editor</strong>; converted pixels load onto an editable layer with extracted palette swatches and a toggleable reference image.</li>
+            </ol>
+          </div>
+
+          <div class="flow-card">
+            <h4>3. Creating and Exporting an Animation</h4>
+            <ol>
+              <li>User expands the bottom <strong>Timeline Drawer</strong> in the Studio and duplicates Frame 1.</li>
+              <li>User turns on <strong>Onion Skinning</strong> and redraws motion on Frames 2–6.</li>
+              <li>User sets playback to <code>8 FPS</code> and previews the loop in the Mini-Preview window.</li>
+              <li>User clicks <strong>Export</strong> and downloads either an animated <strong>GIF</strong> or a <strong>PNG Sprite Sheet</strong>.</li>
+            </ol>
+          </div>
+
+          <div class="flow-card">
+            <h4>4. Saving a Project and Continuing Later</h4>
+            <ol>
+              <li>Authenticated user edits a multi-layer project in <code>/studio/:projectId</code>.</li>
+              <li>Studio auto-saves every 30s (or via <code>Ctrl/Cmd+S</code>), persisting layers, frames, cels, palette, and linked reference image.</li>
+              <li>User returns later, opens <code>/workspace</code>, and selects the project card to resume with full state restored.</li>
+            </ol>
+          </div>
+
+          <div class="flow-card">
+            <h4>5. Publishing Artwork &amp; Receiving Feedback</h4>
+            <ol>
+              <li>User clicks <strong>Publish</strong> in the Studio and enters Title, Category, and Tags.</li>
+              <li>System generates the public snapshot post at <code>/art/:postId</code>.</li>
+              <li>Community members view the post, leave <strong>Likes</strong> and <strong>Comments</strong>, or <strong>Bookmark</strong> it.</li>
+              <li>Creator can continue editing their private draft without affecting the live post until pushing an update.</li>
+            </ol>
+          </div>
+
+          <div class="flow-card">
+            <h4>6. Discovering &amp; Interacting with Creators</h4>
+            <ol>
+              <li>User filters <code>/</code> by <code>Animations</code> + tag <code>#gameart</code>, sorted by <code>Trending</code>.</li>
+              <li>User opens an artwork detail page, inspects the frame playback and palette, and clicks the creator's profile.</li>
+              <li>On <code>/u/:username</code>, user clicks <strong>Follow</strong>; future works appear in their <strong>Following</strong> feed.</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. Data Entities and Relationships -->
+      <section id="data">
+        <h2><span class="sec-num">07</span> Data Entities and Relationships</h2>
+        <p>Core domain model linking users, non-destructive projects, multi-layer animation frames, preserved source images, and community posts:</p>
+
+        <div class="entity-grid">
+          <div class="entity-box">
+            <div class="entity-title"><span>USER</span><span>1 : N</span></div>
+            <ul class="entity-fields">
+              <li><span>id</span><span class="pk">PK (UUID)</span></li>
+              <li><span>username</span><span>Unique</span></li>
+              <li><span>email</span><span>Unique</span></li>
+              <li><span>password_hash</span><span>String</span></li>
+              <li><span>display_name</span><span>String</span></li>
+              <li><span>avatar_url, bio</span><span>String</span></li>
+            </ul>
+          </div>
+
+          <div class="entity-box">
+            <div class="entity-title"><span>PROJECT</span><span>Workspace</span></div>
+            <ul class="entity-fields">
+              <li><span>id</span><span class="pk">PK (UUID)</span></li>
+              <li><span>user_id</span><span class="fk">FK &rarr; USER</span></li>
+              <li><span>source_image_id</span><span class="fk">FK &rarr; SOURCE_IMAGE?</span></li>
+              <li><span>title</span><span>String</span></li>
+              <li><span>width, height, fps</span><span>Int</span></li>
+              <li><span>palette_colors</span><span>JSONB (Hex[])</span></li>
+              <li><span>status</span><span>draft | published</span></li>
+            </ul>
+          </div>
+
+          <div class="entity-box">
+            <div class="entity-title"><span>LAYER &amp; FRAME &amp; CEL</span><span>Canvas Grid</span></div>
+            <ul class="entity-fields">
+              <li><span>LAYER.id</span><span class="pk">PK (project_id FK)</span></li>
+              <li><span>LAYER.order, opacity, flags</span><span>Visible / Locked</span></li>
+              <li><span>FRAME.id</span><span class="pk">PK (project_id FK)</span></li>
+              <li><span>FRAME.order, duration_ms</span><span>Int</span></li>
+              <li><span>CEL.id</span><span class="pk">PK (frame_id + layer_id)</span></li>
+              <li><span>CEL.pixel_data</span><span>Compressed RGBA</span></li>
+            </ul>
+          </div>
+
+          <div class="entity-box">
+            <div class="entity-title"><span>SOURCE_IMAGE</span><span>Preserved Asset</span></div>
+            <ul class="entity-fields">
+              <li><span>id</span><span class="pk">PK (UUID)</span></li>
+              <li><span>user_id</span><span class="fk">FK &rarr; USER</span></li>
+              <li><span>original_file_url</span><span>String</span></li>
+              <li><span>original_width, height</span><span>Int</span></li>
+              <li><span>last_conversion_settings</span><span>JSONB</span></li>
+            </ul>
+          </div>
+
+          <div class="entity-box">
+            <div class="entity-title"><span>POST</span><span>Public Snapshot</span></div>
+            <ul class="entity-fields">
+              <li><span>id</span><span class="pk">PK (UUID)</span></li>
+              <li><span>project_id</span><span class="fk">FK &rarr; PROJECT?</span></li>
+              <li><span>user_id</span><span class="fk">FK &rarr; USER</span></li>
+              <li><span>title, description, category</span><span>String</span></li>
+              <li><span>preview_asset_url</span><span>PNG / GIF URL</span></li>
+              <li><span>snapshot_palette</span><span>JSONB</span></li>
+              <li><span>like_count, comment_count</span><span>Int</span></li>
+            </ul>
+          </div>
+
+          <div class="entity-box">
+            <div class="entity-title"><span>SOCIAL ENTITIES</span><span>Interactions</span></div>
+            <ul class="entity-fields">
+              <li><span>COMMENT</span><span class="fk">id, post_id, user_id, body</span></li>
+              <li><span>LIKE</span><span class="pk">PK (user_id, post_id)</span></li>
+              <li><span>BOOKMARK</span><span class="pk">PK (user_id, post_id)</span></li>
+              <li><span>FOLLOW</span><span class="pk">PK (follower_id, following_id)</span></li>
+              <li><span>POST_TAG</span><span class="pk">PK (post_id, tag_id)</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. Functional Requirements and Business Rules -->
+      <section id="rules">
+        <h2><span class="sec-num">08</span> Functional Requirements and Business Rules</h2>
+        <div class="grid-2">
+          <div class="card">
+            <h4>1. Non-Destructive Source Image Preservation</h4>
+            <p>Uploaded converter images are stored as independent <code>SOURCE_IMAGE</code> records. Editing or deleting converted pixel layers inside a <code>PROJECT</code> never mutates or overwrites the original uploaded file.</p>
+          </div>
+          <div class="card">
+            <h4>2. Draft vs. Published Isolation</h4>
+            <p>A <code>PROJECT</code> holds editable layers and frames, while a <code>POST</code> holds a flattened public snapshot. Draft saves in the studio do not alter the live community post unless the creator explicitly triggers <strong>Update Published Post</strong>.</p>
+          </div>
+          <div class="card">
+            <h4>3. Guest-to-Registered Session Migration</h4>
+            <p>Guests can draw, animate, convert images, and export locally without logging in. Signing up or logging in from the Studio automatically migrates the active local project to their cloud workspace.</p>
+          </div>
+          <div class="card">
+            <h4>4. Strict Pixel Integrity</h4>
+            <p>All canvas viewports, gallery thumbnails, and detail views must render with nearest-neighbor scaling (<code>image-rendering: pixelated</code>) so pixel edges remain razor-sharp at every zoom level.</p>
+          </div>
+          <div class="card">
+            <h4>5. Ownership &amp; Access Control</h4>
+            <p>Draft projects and reference images are strictly private to <code>PROJECT.user_id</code>. Published posts are publicly readable; only the post owner can update/delete a post, and both the post owner and comment author can delete a comment.</p>
+          </div>
+          <div class="card">
+            <h4>6. Idempotent Social Interactions</h4>
+            <p>Likes, Bookmarks, and Follows enforce composite uniqueness. Repeating an action toggles it off, and self-following (<code>follower_id == following_id</code>) is rejected.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9. MVP Scope vs. Future Enhancements -->
+      <section id="scope">
+        <h2><span class="sec-num">09</span> MVP Scope vs. Future Enhancements</h2>
+        <div class="grid-2">
+          <div class="card">
+            <div style="margin-bottom: 0.75rem;"><span class="scope-pill pill-mvp">MVP Scope (Must-Have for v1)</span></div>
+            <ul>
+              <li><strong>Pixel Art Editor</strong>: <code>8x8</code>–<code>512x512</code> canvas, 7 core tools (Pencil, Eraser, Fill, Eyedropper, Line, Rectangle, Circle), custom palettes, zoom/pan/grid/mini-preview, 50-step undo/redo, up to 16 layers, cloud + local save, crisp PNG export.</li>
+              <li><strong>Animation Editor</strong>: Up to 64 frames, add/duplicate/delete/reorder, global FPS (<code>1–30</code>) &amp; frame duration overrides, onion skinning, GIF &amp; PNG sprite sheet export.</li>
+              <li><strong>Image Converter</strong>: PNG/JPG/WebP upload (&le;10MB), resolution &amp; color quantization (<code>2–64</code> colors), dithering toggle, live split preview, import to editor, separate original preservation.</li>
+              <li><strong>Community &amp; Workspace</strong>: Auth, personal workspace (Drafts, Published, Reference Assets, Bookmarks), public profiles, Explore feed, search/tag filters, Likes, Comments, Bookmarks, and Follows.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div style="margin-bottom: 0.75rem;"><span class="scope-pill pill-future">Future Enhancements (Post-MVP)</span></div>
+            <ul>
+              <li><strong>Advanced Selection &amp; Transform</strong>: Rectangular/lasso marquee selection, move/rotate/flip selection, symmetry/mirror drawing axes, and seamless tilemap mode.</li>
+              <li><strong>Remixing &amp; Collaboration</strong>: Opt-in "Allow Remix" flag to fork community artworks with attribution, and real-time multi-user canvas sessions.</li>
+              <li><strong>Challenges &amp; Curated Galleries</strong>: Daily/weekly themed prompts, restricted palette challenges, and user-curated collections.</li>
+              <li><strong>Extended Formats &amp; Notifications</strong>: <code>.aseprite</code> file import/export, MP4/WebM export, and real-time in-app notification center.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const toggleBtn = document.getElementById('themeToggle');
+    toggleBtn.addEventListener('click', () => {
+      const html = document.documentElement;
+      const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+    });
+  </script>
+</body>
+</html>

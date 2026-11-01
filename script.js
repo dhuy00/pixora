@@ -795,14 +795,20 @@ function renderEditorCanvas() {
   const stageBox = document.getElementById('canvasStageBox');
   const viewportWrap = document.getElementById('canvasViewportWrap');
   if (stageBox) {
-    let fitBase = 340;
+    let fitBase = 352;
     if (viewportWrap && viewportWrap.clientWidth > 0 && viewportWrap.clientHeight > 0) {
-      const avail = Math.min(viewportWrap.clientWidth - 24, viewportWrap.clientHeight - 24);
-      fitBase = Math.max(180, Math.min(480, avail));
+      const avail = Math.min(viewportWrap.clientWidth - 20, viewportWrap.clientHeight - 20);
+      fitBase = Math.max(192, Math.min(512, avail));
     }
-    const basePx = Math.round(fitBase * (studioState.zoom / 100));
+    const rawTargetPx = fitBase * (studioState.zoom / 100);
+    const cellPx = Math.max(4, Math.floor(rawTargetPx / size));
+    const basePx = cellPx * size;
+
     stageBox.style.width = `${basePx}px`;
     stageBox.style.height = `${basePx}px`;
+    stageBox.style.setProperty('--cell-px', `${cellPx}px`);
+    stageBox.style.setProperty('--major-px', `${cellPx * 8}px`);
+    stageBox.classList.toggle('show-pixel-grid', Boolean(studioState.showGrid));
   }
 }
 
@@ -1066,25 +1072,30 @@ function switchPage(pageName = 'home', scrollToTop = true) {
   }
 }
 
+// Category-to-Tile Background Color Mapping (Each artwork category has its own unique background color)
+const CATEGORY_TILE_MAP = {
+  characters: 'stream-tile-mint',
+  'game assets': 'stream-tile-yellow',
+  scenery: 'stream-tile-pink',
+  cyberpunk: 'stream-tile-ultraviolet'
+};
+
+function getCategoryTileClass(category = '') {
+  return CATEGORY_TILE_MAP[String(category).trim().toLowerCase()] || '';
+}
+
 // Render Community Explore Gallery Cards (Full Community Grid + Home Community Demo Preview)
 function renderGalleryGrid() {
   const grid = document.getElementById('galleryGrid');
   const demoGrid = document.getElementById('homeCommunityDemoGrid');
 
-  const tileStyles = [
-    '', // #131313 + 1px solid #ffffff hairline
-    'stream-tile-mint',
-    'stream-tile-ultraviolet',
-    '',
-    'stream-tile-yellow',
-    'stream-tile-white'
-  ];
   const streamTimes = ['16:20 UTC', '15:42 UTC', '14:18 UTC', '13:05 UTC', '11:50 UTC', '09:30 UTC'];
 
   const createPostCardElement = (post, idx) => {
     const article = document.createElement('article');
-    const tileVariant = tileStyles[idx % tileStyles.length];
+    const tileVariant = getCategoryTileClass(post.category);
     article.className = `art-card ${tileVariant}`.trim();
+    article.dataset.category = post.category;
     const timestamp = streamTimes[idx % streamTimes.length];
     article.innerHTML = `
       <div class="stream-card-rail-head">
@@ -1460,8 +1471,14 @@ function renderWorkspace() {
     });
   }
 
+  const closeWorkspaceModalIfOpen = () => {
+    const wModal = document.getElementById('workspaceModal');
+    if (wModal) wModal.classList.add('hidden');
+  };
+
   grid.querySelectorAll('[data-open-draft]').forEach((btn) => {
     btn.addEventListener('click', () => {
+      closeWorkspaceModalIfOpen();
       loadStudioTemplate(btn.dataset.openDraft);
       switchPage('studio');
       showToast('Loaded draft into Studio');
@@ -1469,11 +1486,15 @@ function renderWorkspace() {
   });
 
   grid.querySelectorAll('[data-view-post]').forEach((btn) => {
-    btn.addEventListener('click', () => openArtworkDetailModal(btn.dataset.viewPost));
+    btn.addEventListener('click', () => {
+      closeWorkspaceModalIfOpen();
+      openArtworkDetailModal(btn.dataset.viewPost);
+    });
   });
 
   grid.querySelectorAll('[data-reconvert]').forEach((btn) => {
     btn.addEventListener('click', () => {
+      closeWorkspaceModalIfOpen();
       converterState.sampleName = btn.dataset.reconvert;
       converterState.uploadedImage = null;
       runImageToPixelConversion();
@@ -2122,7 +2143,31 @@ function bindAppControls() {
     showToast(`Published "${title}" to StoryStream`);
   });
 
-  // Workspace Tabs
+  // Workspace Modal & Tabs
+  const openWorkspaceBtn = document.getElementById('openWorkspaceModalBtn');
+  if (openWorkspaceBtn) {
+    openWorkspaceBtn.addEventListener('click', () => {
+      playSfx('blip');
+      renderWorkspace();
+      document.getElementById('workspaceModal').classList.remove('hidden');
+    });
+  }
+
+  const closeWorkspaceBtn = document.getElementById('closeWorkspaceModalBtn');
+  if (closeWorkspaceBtn) {
+    closeWorkspaceBtn.addEventListener('click', () => {
+      document.getElementById('workspaceModal').classList.add('hidden');
+    });
+  }
+
+  document.querySelectorAll('.modal').forEach((modalEl) => {
+    modalEl.addEventListener('click', (e) => {
+      if (e.target === modalEl) {
+        modalEl.classList.add('hidden');
+      }
+    });
+  });
+
   document.querySelectorAll('[data-wtab]').forEach((tab) => {
     tab.addEventListener('click', () => {
       document.querySelectorAll('[data-wtab]').forEach((t) => {

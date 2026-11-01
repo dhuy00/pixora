@@ -136,16 +136,16 @@
                     </div>
                   </article>
 
-                  <article class="mini-feature-card tile-ultraviolet" data-open-art="post-2" role="button" tabindex="0">
+                  <article class="mini-feature-card tile-mint" data-open-art="post-2" role="button" tabindex="0">
                     <div class="rail-timestamp-col">
                       <span class="mono-timestamp">15:42 UTC</span>
-                      <span class="pill-tag mint-tag">4F LOOP</span>
+                      <span class="pill-tag dark-tag">4F LOOP</span>
                     </div>
                     <div class="mini-stage">
                       <canvas id="heroCanvasWide" width="32" height="32" aria-label="Night Mage sprite"></canvas>
                     </div>
                     <div class="mini-card-info">
-                      <span class="eyebrow-allcaps">GAME ASSETS</span>
+                      <span class="eyebrow-allcaps">CHARACTERS</span>
                       <strong>Night Mage</strong>
                       <span class="byline-micro">BY @HEXMAGE</span>
                     </div>
@@ -161,7 +161,7 @@
                         <canvas id="heroCanvasSmall" width="32" height="32" aria-label="King Slime sprite"></canvas>
                       </div>
                       <div class="mini-card-info">
-                        <span class="eyebrow-allcaps">BOSS SPRITE</span>
+                        <span class="eyebrow-allcaps">GAME ASSETS</span>
                         <strong>King Slime</strong>
                         <span class="byline-micro">BY @SLIMECRAFT</span>
                       </div>
@@ -192,21 +192,17 @@
         </div>
 
         <!-- =================================================================
-             PAGE 2: STUDIO (Full Pixel Console + Personal Workspace)
+             PAGE 2: STUDIO (Full Pixel Console — Workspace in Modal)
              ================================================================= -->
         <div class="page-view hidden" id="pageStudio" data-page-view="studio">
-          <!-- 2. UNIFIED PIXEL STUDIO CONSOLE (Full-Viewport Fit: Tools + Canvas + Timeline Rail + Inspector + Workspace) -->
+          <!-- 2. UNIFIED PIXEL STUDIO CONSOLE (Single-Line Header + 3-Column Editor + Attached Timeline Rail) -->
           <section class="studio-section" id="studio" aria-labelledby="studioSectionHeading">
             <div class="studio-shell">
-              <!-- Studio Top Toolbar (Merged Console Masthead + Project Controls + Actions) -->
+              <!-- Studio Top Toolbar (Single-Line Ultra-Compact Bar) -->
               <div class="studio-topbar">
                 <div class="studio-title-group">
-                  <div class="console-brand-pill">
-                    <span class="whisper-eyebrow console-eyebrow-inline">CONSOLE</span>
-                    <h2 id="studioSectionHeading" class="studio-inline-heading">THE PIXEL CONSOLE</h2>
-                  </div>
+                  <h2 id="studioSectionHeading" class="studio-inline-heading">CONSOLE</h2>
                   <span class="divider-v" aria-hidden="true"></span>
-                  <span class="eyebrow-allcaps">PROJECT //</span>
                   <input
                     id="studioProjectTitle"
                     class="project-title-input"
@@ -217,57 +213,60 @@
                   />
                   <span class="save-indicator" id="saveStatusBadge" title="Project auto-saved in browser">
                     <span class="save-dot"></span>
-                    COMMITTED
+                    <span class="save-label-text">SAVED</span>
                   </span>
                 </div>
 
                 <div class="studio-preset-bar" role="group" aria-label="Canvas presets">
                   <label class="studio-select-label" for="templateSelect">
-                    <span class="mono-timestamp">SAMPLE:</span>
+                    <span class="mono-timestamp">PRESET</span>
                     <select id="templateSelect" aria-label="Load sample project">
-                      <option value="duck">Disco Duck (6 Frames)</option>
-                      <option value="sunset">Sunset River (4 Frames)</option>
-                      <option value="slime">King Slime (6 Frames)</option>
-                      <option value="goblin">Night Mage (4 Frames)</option>
-                      <option value="cat">Cyber Cat (4 Frames)</option>
-                      <option value="sword">Crystal Sword (Static)</option>
+                      <option value="duck">Disco Duck (6F)</option>
+                      <option value="sunset">Sunset River (4F)</option>
+                      <option value="slime">King Slime (6F)</option>
+                      <option value="goblin">Night Mage (4F)</option>
+                      <option value="cat">Cyber Cat (4F)</option>
+                      <option value="sword">Crystal Sword (1F)</option>
                       <option value="blank">Blank Canvas</option>
                     </select>
                   </label>
 
                   <label class="studio-select-label" for="canvasSizeSelect">
-                    <span class="mono-timestamp">GRID:</span>
+                    <span class="mono-timestamp">GRID</span>
                     <select id="canvasSizeSelect" aria-label="Canvas dimensions">
-                      <option value="16">16 × 16 PX</option>
-                      <option value="32" selected>32 × 32 PX</option>
-                      <option value="48">48 × 48 PX</option>
+                      <option value="16">16×16</option>
+                      <option value="32" selected>32×32</option>
+                      <option value="48">48×48</option>
                     </select>
                   </label>
                 </div>
 
                 <div class="studio-actions">
                   <button class="px-btn secondary small" id="undoBtn" type="button" title="Undo (Ctrl+Z)">
-                    <span>UNDO</span>
+                    <span>↶ UNDO</span>
                   </button>
                   <button class="px-btn secondary small" id="redoBtn" type="button" title="Redo (Ctrl+Y)">
-                    <span>REDO</span>
+                    <span>↷ REDO</span>
                   </button>
                   <button class="px-btn secondary small" id="stampDuckBtn" type="button" title="Stamp a cute mini sprite onto active layer">
                     <span>+ STAMP</span>
                   </button>
-                  <button class="px-btn ultraviolet-outline small" id="studioConvertBtn" type="button">
-                    <span>IMPORT IMAGE</span>
+                  <button class="px-btn tertiary-mint small" id="openWorkspaceModalBtn" type="button" title="Open Personal Workspace (Drafts, Sources &amp; Saved)">
+                    <span>WORKSPACE</span>
                   </button>
-                  <button class="px-btn tertiary-mint small" id="openExportModalBtn" type="button">
-                    <span>EXPORT PNG</span>
+                  <button class="px-btn ultraviolet-outline small" id="studioConvertBtn" type="button" title="Image-to-Pixel Converter">
+                    <span>IMPORT</span>
                   </button>
-                  <button class="px-btn primary small" id="openPublishModalBtn" type="button">
-                    <span>PUBLISH TO STREAM</span>
+                  <button class="px-btn secondary small" id="openExportModalBtn" type="button" title="Export Crisp PNG / Sprite Sheet">
+                    <span>EXPORT</span>
+                  </button>
+                  <button class="px-btn primary small" id="openPublishModalBtn" type="button" title="Publish to StoryStream">
+                    <span>PUBLISH</span>
                   </button>
                 </div>
               </div>
 
-              <!-- 4-Column Full-Screen Studio Workspace (Tools | Canvas + Timeline Rail | Preview/Palette/Layers | Personal Workspace) -->
+              <!-- 3-Column Full-Screen Studio Workspace (Tools | Canvas + Timeline Rail | Right Sidebar) -->
               <div class="studio-workspace">
                 <!-- Col 1: Left Dock (Tools & Brush Settings) -->
                 <aside class="studio-dock left-dock" aria-label="Drawing tools">
@@ -279,35 +278,35 @@
 
                     <div class="tool-grid" role="toolbar" aria-label="Pixel tools">
                       <button class="tool-btn active" data-tool="pencil" type="button" title="Pencil (B)" aria-label="Pencil">
-                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
                         <span class="tool-name">PENCIL</span>
                       </button>
                       <button class="tool-btn" data-tool="eraser" type="button" title="Eraser (E)" aria-label="Eraser">
-                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/></svg>
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/></svg>
                         <span class="tool-name">ERASER</span>
                       </button>
                       <button class="tool-btn" data-tool="fill" type="button" title="Fill Bucket (G)" aria-label="Fill Bucket">
-                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 11-8-8-8.6 8.6a2 2 0 0 0 0 2.8l5.2 5.2c.8.8 2 .8 2.8 0L19 11Z"/><path d="m5 2 5 5"/><path d="M2 13h15"/><path d="M22 20a2 2 0 1 1-4 0c0-1.6 1.7-2.4 2-4 .3 1.6 2 2.4 2 4Z"/></svg>
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 11-8-8-8.6 8.6a2 2 0 0 0 0 2.8l5.2 5.2c.8.8 2 .8 2.8 0L19 11Z"/><path d="m5 2 5 5"/><path d="M2 13h15"/><path d="M22 20a2 2 0 1 1-4 0c0-1.6 1.7-2.4 2-4 .3 1.6 2 2.4 2 4Z"/></svg>
                         <span class="tool-name">BUCKET</span>
                       </button>
                       <button class="tool-btn" data-tool="eyedropper" type="button" title="Color Picker (I)" aria-label="Eyedropper">
-                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="m2 22 1-1h3l9-9"/><path d="M3 21v-3l9-9"/><path d="m15 6 3.4-3.4a2.1 2.1 0 1 1 3 3L18 9l.4.4a2.1 2.1 0 1 1-3 3l-3.8-3.8a2.1 2.1 0 1 1 3-3l.4.4Z"/></svg>
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="m2 22 1-1h3l9-9"/><path d="M3 21v-3l9-9"/><path d="m15 6 3.4-3.4a2.1 2.1 0 1 1 3 3L18 9l.4.4a2.1 2.1 0 1 1-3 3l-3.8-3.8a2.1 2.1 0 1 1 3-3l.4.4Z"/></svg>
                         <span class="tool-name">PICKER</span>
                       </button>
                       <button class="tool-btn" data-tool="line" type="button" title="Line Tool (L)" aria-label="Line">
-                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="19" x2="19" y2="5"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="5" r="2"/></svg>
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="19" x2="19" y2="5"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="5" r="2"/></svg>
                         <span class="tool-name">LINE</span>
                       </button>
                       <button class="tool-btn" data-tool="rect" type="button" title="Rectangle (R)" aria-label="Rectangle">
-                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14"/></svg>
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14"/></svg>
                         <span class="tool-name">RECT</span>
                       </button>
                       <button class="tool-btn" data-tool="circle" type="button" title="Circle (C)" aria-label="Circle">
-                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>
                         <span class="tool-name">CIRCLE</span>
                       </button>
                       <button class="tool-btn" data-tool="mirror" type="button" title="Mirror Symmetry Pencil (M)" aria-label="Mirror">
-                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="3" x2="12" y2="21" stroke-dasharray="2 2"/><polygon points="4 7 9 12 4 17 4 7"/><polygon points="20 7 15 12 20 17 20 7"/></svg>
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="3" x2="12" y2="21" stroke-dasharray="2 2"/><polygon points="4 7 9 12 4 17 4 7"/><polygon points="20 7 15 12 20 17 20 7"/></svg>
                         <span class="tool-name">MIRROR</span>
                       </button>
                     </div>
@@ -347,11 +346,6 @@
                       <button class="px-btn secondary small full-w" id="flipHBtn" type="button">FLIP H</button>
                       <button class="px-btn tertiary-mint small full-w" id="clearLayerBtn" type="button">CLEAR</button>
                     </div>
-
-                    <div class="console-hazard-badges">
-                      <span class="pill-tag mint-tag">ONION SKIN READY</span>
-                      <span class="pill-tag ultraviolet-tag">16-LAYER STACK</span>
-                    </div>
                   </div>
                 </aside>
 
@@ -371,7 +365,7 @@
                   </div>
 
                   <div class="canvas-viewport" id="canvasViewportWrap">
-                    <div class="canvas-checkerboard" id="canvasStageBox">
+                    <div class="canvas-checkerboard show-pixel-grid" id="canvasStageBox">
                       <canvas
                         id="editorCanvas"
                         width="32"
@@ -381,7 +375,7 @@
                     </div>
                   </div>
 
-                  <!-- Attached Bottom Animation Timeline Rail (Inside Center Stage so it never overflows off-screen) -->
+                  <!-- Attached Bottom Animation Timeline Rail -->
                   <div class="timeline-bar" aria-label="Animation timeline">
                     <div class="timeline-head">
                       <div class="timeline-title-wrap">
@@ -420,29 +414,20 @@
                   </div>
                 </div>
 
-                <!-- Col 3: Right Dock (Mini-Preview, Palette & Layers) -->
-                <aside class="studio-dock right-dock" aria-label="Preview, colors, and layers">
-                  <!-- Live Preview + Active Color -->
+                <!-- Col 3: Color & Palette Sidebar -->
+                <aside class="studio-dock color-dock" aria-label="Colors and palette">
                   <div class="dock-section">
                     <div class="dock-head">
-                      <h3>LIVE PREVIEW</h3>
-                      <span class="mono-timestamp" id="previewFpsBadge">8 FPS</span>
+                      <h3>ACTIVE COLOR</h3>
+                      <button class="px-btn tertiary-mint tiny" id="addColorSwatchBtn" type="button">+ SWATCH</button>
                     </div>
-                    <div class="mini-preview-box">
-                      <canvas id="miniPreviewCanvas" width="32" height="32" aria-label="Live animation preview"></canvas>
-                      <div class="mini-preview-meta">
-                        <span class="eyebrow-allcaps">REALTIME LOOP</span>
-                        <label class="color-picker-wrap" for="customColorPicker" title="Choose custom color">
-                          <input id="customColorPicker" type="color" value="#3cffd0" aria-label="Custom color picker" />
-                          <span class="color-hex-label" id="activeColorHex">#3CFFD0</span>
-                        </label>
-                        <button class="px-btn tertiary-mint tiny full-w" id="addColorSwatchBtn" type="button">+ ADD SWATCH</button>
-                      </div>
-                    </div>
+                    <label class="color-picker-wrap full-w" for="customColorPicker" title="Choose custom color">
+                      <input id="customColorPicker" type="color" value="#3cffd0" aria-label="Custom color picker" />
+                      <span class="color-hex-label" id="activeColorHex">#3CFFD0</span>
+                    </label>
                   </div>
 
-                  <!-- Color Palette -->
-                  <div class="dock-section">
+                  <div class="dock-section palette-section-grow">
                     <div class="dock-head">
                       <h3>PALETTE</h3>
                       <select id="palettePresetSelect" class="compact-select" aria-label="Select palette preset">
@@ -455,6 +440,20 @@
                     </div>
 
                     <div class="palette-list" id="paletteContainer" role="listbox" aria-label="Color palette swatches"></div>
+                  </div>
+                </aside>
+
+                <!-- Col 4: Live Preview & Layers Sidebar -->
+                <aside class="studio-dock right-dock" aria-label="Live preview and layers">
+                  <!-- Live Preview -->
+                  <div class="dock-section">
+                    <div class="dock-head">
+                      <h3>LIVE PREVIEW</h3>
+                      <span class="mono-timestamp" id="previewFpsBadge">8 FPS</span>
+                    </div>
+                    <div class="mini-preview-box">
+                      <canvas id="miniPreviewCanvas" width="32" height="32" aria-label="Live animation preview"></canvas>
+                    </div>
                   </div>
 
                   <!-- Layers Stack -->
@@ -476,35 +475,6 @@
                     <ul class="layer-list" id="layerListContainer" aria-label="Layers list"></ul>
                   </div>
                 </aside>
-
-                <!-- Col 4: Personal Workspace Dock (Attached directly in Studio Grid so it fits on screen without scrolling) -->
-                <section class="workspace-section studio-dock workspace-dock" id="workspace" aria-labelledby="workspaceHeading">
-                  <div class="dock-section workspace-dock-header">
-                    <div class="dock-head">
-                      <div>
-                        <p class="whisper-eyebrow workspace-eyebrow">Local Drafts &amp; Saved Tiles</p>
-                        <h2 id="workspaceHeading" class="workspace-dock-title">WORKSPACE</h2>
-                      </div>
-                      <span class="pill-tag mint-tag">SYNCED</span>
-                    </div>
-                    <div class="workspace-tabs" role="tablist" aria-label="Workspace tabs">
-                      <button class="chip active" data-wtab="drafts" role="tab" aria-selected="true" type="button">
-                        DRAFTS (<span id="countDrafts">4</span>)
-                      </button>
-                      <button class="chip" data-wtab="published" role="tab" aria-selected="false" type="button">
-                        PUBLISHED (<span id="countPublished">6</span>)
-                      </button>
-                      <button class="chip" data-wtab="references" role="tab" aria-selected="false" type="button">
-                        SOURCES (<span id="countRefs">3</span>)
-                      </button>
-                      <button class="chip" data-wtab="bookmarks" role="tab" aria-selected="false" type="button">
-                        SAVED (<span id="countBookmarks">2</span>)
-                      </button>
-                    </div>
-                  </div>
-
-                  <div class="workspace-items-grid" id="workspaceItemsGrid"></div>
-                </section>
               </div>
             </div>
           </section>
@@ -525,10 +495,18 @@
               <div class="filter-bar">
                 <div class="filter-group" id="categoryFilterGroup" role="group" aria-label="Category filter">
                   <button class="chip active" data-category="all" type="button">ALL</button>
-                  <button class="chip" data-category="Characters" type="button">CHARACTERS</button>
-                  <button class="chip" data-category="Game Assets" type="button">GAME ASSETS</button>
-                  <button class="chip" data-category="Scenery" type="button">SCENERY</button>
-                  <button class="chip" data-category="Cyberpunk" type="button">CYBERPUNK</button>
+                  <button class="chip" data-category="Characters" type="button">
+                    <span class="cat-dot cat-dot-mint" aria-hidden="true"></span>CHARACTERS
+                  </button>
+                  <button class="chip" data-category="Game Assets" type="button">
+                    <span class="cat-dot cat-dot-yellow" aria-hidden="true"></span>GAME ASSETS
+                  </button>
+                  <button class="chip" data-category="Scenery" type="button">
+                    <span class="cat-dot cat-dot-pink" aria-hidden="true"></span>SCENERY
+                  </button>
+                  <button class="chip" data-category="Cyberpunk" type="button">
+                    <span class="cat-dot cat-dot-ultraviolet" aria-hidden="true"></span>CYBERPUNK
+                  </button>
                 </div>
 
                 <div class="filter-group" id="formatFilterGroup" role="group" aria-label="Format filter">
@@ -836,6 +814,41 @@
             <button class="px-btn primary full-w" type="submit" style="margin-top:14px">PUBLISH TO STORYSTREAM</button>
           </form>
         </div>
+      </div>
+    </div>
+
+    <!-- MODAL 4: PERSONAL WORKSPACE -->
+    <div class="modal hidden" id="workspaceModal" role="dialog" aria-modal="true" aria-labelledby="workspaceHeading">
+      <div class="modal-panel wide-modal">
+        <div class="modal-header">
+          <div>
+            <span class="eyebrow-allcaps">LOCAL STORAGE &amp; SAVED TILES //</span>
+            <h2 id="workspaceHeading" class="heading-large">Personal Workspace</h2>
+          </div>
+          <button class="close-btn" id="closeWorkspaceModalBtn" type="button" aria-label="Close">×</button>
+        </div>
+
+        <section class="workspace-section" id="workspace" aria-label="Workspace items">
+          <div class="workspace-modal-toolbar">
+            <p class="whisper-eyebrow workspace-eyebrow">Drafts, Quantized Reference Sources &amp; Bookmarked Sprites</p>
+            <div class="workspace-tabs" role="tablist" aria-label="Workspace tabs">
+              <button class="chip active" data-wtab="drafts" role="tab" aria-selected="true" type="button">
+                DRAFTS (<span id="countDrafts">4</span>)
+              </button>
+              <button class="chip" data-wtab="published" role="tab" aria-selected="false" type="button">
+                PUBLISHED (<span id="countPublished">6</span>)
+              </button>
+              <button class="chip" data-wtab="references" role="tab" aria-selected="false" type="button">
+                REFERENCE IMAGES (<span id="countRefs">3</span>)
+              </button>
+              <button class="chip" data-wtab="bookmarks" role="tab" aria-selected="false" type="button">
+                BOOKMARKS (<span id="countBookmarks">2</span>)
+              </button>
+            </div>
+          </div>
+
+          <div class="workspace-items-grid" id="workspaceItemsGrid"></div>
+        </section>
       </div>
     </div>
 

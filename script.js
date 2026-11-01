@@ -793,8 +793,14 @@ function renderEditorCanvas() {
   });
 
   const stageBox = document.getElementById('canvasStageBox');
+  const viewportWrap = document.getElementById('canvasViewportWrap');
   if (stageBox) {
-    const basePx = Math.round(448 * (studioState.zoom / 100));
+    let fitBase = 340;
+    if (viewportWrap && viewportWrap.clientWidth > 0 && viewportWrap.clientHeight > 0) {
+      const avail = Math.min(viewportWrap.clientWidth - 24, viewportWrap.clientHeight - 24);
+      fitBase = Math.max(180, Math.min(480, avail));
+    }
+    const basePx = Math.round(fitBase * (studioState.zoom / 100));
     stageBox.style.width = `${basePx}px`;
     stageBox.style.height = `${basePx}px`;
   }
@@ -1033,31 +1039,37 @@ function bindStudioCanvasEvents() {
   });
 }
 
-// Render Community Explore Gallery Cards
+// Page Router (Page 1: home, Page 2: studio, Page 3: community)
+function switchPage(pageName = 'home', scrollToTop = true) {
+  const validPages = ['home', 'studio', 'community'];
+  const target = validPages.includes(pageName) ? pageName : 'home';
+
+  document.body.setAttribute('data-active-page', target);
+
+  document.querySelectorAll('.page-view').forEach((view) => {
+    const isTarget = view.dataset.pageView === target;
+    view.classList.toggle('hidden', !isTarget);
+    view.classList.toggle('active', isTarget);
+  });
+
+  document.querySelectorAll('.main-nav .nav-link').forEach((link) => {
+    link.classList.toggle('active', link.dataset.nav === target);
+  });
+
+  if (target === 'studio') {
+    renderEditorCanvas();
+    requestAnimationFrame(() => renderEditorCanvas());
+  }
+
+  if (scrollToTop) {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+// Render Community Explore Gallery Cards (Full Community Grid + Home Community Demo Preview)
 function renderGalleryGrid() {
   const grid = document.getElementById('galleryGrid');
-  if (!grid) return;
-
-  const filtered = appData.posts
-    .filter((post) => {
-      if (appData.filterCategory !== 'all' && post.category.toLowerCase() !== appData.filterCategory.toLowerCase()) {
-        return false;
-      }
-      if (appData.filterFormat === 'animated' && !post.isAnimated) return false;
-      if (appData.filterFormat === 'static' && post.isAnimated) return false;
-      if (appData.filterSort === 'following' && !post.following) return false;
-      if (appData.searchQuery.trim() !== '') {
-        const q = appData.searchQuery.toLowerCase().replace('#', '');
-        const matchTitle = post.title.toLowerCase().includes(q);
-        const matchCreator = post.creator.toLowerCase().includes(q);
-        const matchTags = post.tags.some((t) => t.toLowerCase().includes(q));
-        if (!matchTitle && !matchCreator && !matchTags) return false;
-      }
-      return true;
-    })
-    .sort((a, b) => (appData.filterSort === 'trending' ? b.likes - a.likes : 0));
-
-  grid.innerHTML = '';
+  const demoGrid = document.getElementById('homeCommunityDemoGrid');
 
   const tileStyles = [
     '', // #131313 + 1px solid #ffffff hairline
@@ -1069,7 +1081,7 @@ function renderGalleryGrid() {
   ];
   const streamTimes = ['16:20 UTC', '15:42 UTC', '14:18 UTC', '13:05 UTC', '11:50 UTC', '09:30 UTC'];
 
-  filtered.forEach((post, idx) => {
+  const createPostCardElement = (post, idx) => {
     const article = document.createElement('article');
     const tileVariant = tileStyles[idx % tileStyles.length];
     article.className = `art-card ${tileVariant}`.trim();
@@ -1099,31 +1111,69 @@ function renderGalleryGrid() {
         </div>
       </div>
     `;
-    grid.appendChild(article);
-  });
+    return article;
+  };
 
-  grid.querySelectorAll('.gallery-card-canvas').forEach((c) => {
-    const post = appData.posts.find((p) => p.id === c.dataset.postId);
-    if (post) {
-      renderPixelArrayToCanvas(c, compositeFrame(post.project, 0), post.project.size);
-    }
-  });
-
-  grid.querySelectorAll('[data-inspect]').forEach((el) => {
-    el.addEventListener('click', () => openArtworkDetailModal(el.dataset.inspect));
-  });
-
-  grid.querySelectorAll('[data-like]').forEach((btn) => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const post = appData.posts.find((p) => p.id === btn.dataset.like);
-      if (!post) return;
-      playSfx('coin');
-      post.liked = !post.liked;
-      post.likes += post.liked ? 1 : -1;
-      renderGalleryGrid();
+  const wireCardContainer = (container) => {
+    if (!container) return;
+    container.querySelectorAll('.gallery-card-canvas').forEach((c) => {
+      const post = appData.posts.find((p) => p.id === c.dataset.postId);
+      if (post) {
+        renderPixelArrayToCanvas(c, compositeFrame(post.project, 0), post.project.size);
+      }
     });
+
+    container.querySelectorAll('[data-inspect]').forEach((el) => {
+      el.addEventListener('click', () => openArtworkDetailModal(el.dataset.inspect));
+    });
+
+    container.querySelectorAll('[data-like]').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const post = appData.posts.find((p) => p.id === btn.dataset.like);
+        if (!post) return;
+        playSfx('coin');
+        post.liked = !post.liked;
+        post.likes += post.liked ? 1 : -1;
+        renderGalleryGrid();
+      });
+    });
+  };
+
+  if (demoGrid) {
+    demoGrid.innerHTML = '';
+    appData.posts.slice(0, 6).forEach((post, idx) => {
+      demoGrid.appendChild(createPostCardElement(post, idx));
+    });
+    wireCardContainer(demoGrid);
+  }
+
+  if (!grid) return;
+
+  const filtered = appData.posts
+    .filter((post) => {
+      if (appData.filterCategory !== 'all' && post.category.toLowerCase() !== appData.filterCategory.toLowerCase()) {
+        return false;
+      }
+      if (appData.filterFormat === 'animated' && !post.isAnimated) return false;
+      if (appData.filterFormat === 'static' && post.isAnimated) return false;
+      if (appData.filterSort === 'following' && !post.following) return false;
+      if (appData.searchQuery.trim() !== '') {
+        const q = appData.searchQuery.toLowerCase().replace('#', '');
+        const matchTitle = post.title.toLowerCase().includes(q);
+        const matchCreator = post.creator.toLowerCase().includes(q);
+        const matchTags = post.tags.some((t) => t.toLowerCase().includes(q));
+        if (!matchTitle && !matchCreator && !matchTags) return false;
+      }
+      return true;
+    })
+    .sort((a, b) => (appData.filterSort === 'trending' ? b.likes - a.likes : 0));
+
+  grid.innerHTML = '';
+  filtered.forEach((post, idx) => {
+    grid.appendChild(createPostCardElement(post, idx));
   });
+  wireCardContainer(grid);
 }
 
 // Open Artwork Detail Modal
@@ -1413,7 +1463,7 @@ function renderWorkspace() {
   grid.querySelectorAll('[data-open-draft]').forEach((btn) => {
     btn.addEventListener('click', () => {
       loadStudioTemplate(btn.dataset.openDraft);
-      document.getElementById('studio').scrollIntoView({ behavior: 'smooth' });
+      switchPage('studio');
       showToast('Loaded draft into Studio');
     });
   });
@@ -1561,17 +1611,34 @@ function bindAppControls() {
     showToast('CANVAS LOCKED TO #131313 // NO LIGHT MODE');
   });
 
+  // 3-Page Navigation Routing (Page 1: home, Page 2: studio, Page 3: community)
+  document.querySelectorAll('.main-nav .nav-link').forEach((link) => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      playSfx('blip');
+      switchPage(link.dataset.nav);
+    });
+  });
+
+  document.querySelectorAll('[data-nav-trigger]').forEach((trigger) => {
+    trigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      playSfx('blip');
+      switchPage(trigger.dataset.navTrigger);
+    });
+  });
+
   document.getElementById('startDrawingBtn').addEventListener('click', () => {
-    document.getElementById('studio').scrollIntoView({ behavior: 'smooth' });
+    switchPage('studio');
   });
   document.getElementById('headerCreateBtn').addEventListener('click', () => {
     loadStudioTemplate('blank');
-    document.getElementById('studio').scrollIntoView({ behavior: 'smooth' });
+    switchPage('studio');
     showToast('Started new blank 32×32 canvas');
   });
   document.getElementById('tryTemplateBtn').addEventListener('click', () => {
     loadStudioTemplate('duck');
-    document.getElementById('studio').scrollIntoView({ behavior: 'smooth' });
+    switchPage('studio');
     showToast('Loaded Disco Duck animation in Studio');
   });
 
@@ -1617,6 +1684,9 @@ function bindAppControls() {
 
   document.getElementById('gallerySearchInput').addEventListener('input', (e) => {
     appData.searchQuery = e.target.value;
+    if (appData.searchQuery.trim() !== '') {
+      switchPage('community', false);
+    }
     renderGalleryGrid();
   });
 
@@ -1916,7 +1986,7 @@ function bindAppControls() {
 
     document.getElementById('converterModal').classList.add('hidden');
     syncStudioUI();
-    document.getElementById('studio').scrollIntoView({ behavior: 'smooth' });
+    switchPage('studio');
     showToast('Imported converted pixel art into Studio');
   };
 
@@ -1939,7 +2009,7 @@ function bindAppControls() {
     loadStudioTemplate(post.template, post.project.size);
     document.getElementById('studioProjectTitle').value = `${post.title} (Edit)`;
     document.getElementById('artDetailModal').classList.add('hidden');
-    document.getElementById('studio').scrollIntoView({ behavior: 'smooth' });
+    switchPage('studio');
     showToast(`Opened "${post.title}" in Studio`);
   });
 
@@ -2048,8 +2118,8 @@ function bindAppControls() {
     document.getElementById('exportPublishModal').classList.add('hidden');
     renderGalleryGrid();
     renderWorkspace();
-    document.getElementById('explore').scrollIntoView({ behavior: 'smooth' });
-    showToast(`Published "${title}" to Gallery`);
+    switchPage('community');
+    showToast(`Published "${title}" to StoryStream`);
   });
 
   // Workspace Tabs
@@ -2101,7 +2171,13 @@ function bindAppControls() {
     });
   }
 
-  // Keyboard shortcuts
+  // Keyboard shortcuts & responsive canvas fit
+  window.addEventListener('resize', () => {
+    if (document.body.getAttribute('data-active-page') === 'studio') {
+      renderEditorCanvas();
+    }
+  });
+
   window.addEventListener('keydown', (e) => {
     if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {

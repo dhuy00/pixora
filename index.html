@@ -28,16 +28,15 @@
     <header class="topbar" role="banner">
       <div class="topbar-inner">
         <div class="topbar-left">
-          <a href="#studio" class="brand-wrap" aria-label="Pixaura Home">
+          <a href="#home" class="brand-wrap" data-nav-trigger="home" aria-label="Pixaura Home">
             <span class="brand-name">PIXAURA</span>
             <span class="pill-tag mint-tag">v2.4</span>
           </a>
 
           <nav class="main-nav" aria-label="Primary navigation">
-            <a href="#studio" class="nav-link active" data-nav="studio">STUDIO</a>
-            <a href="#explore" class="nav-link" data-nav="explore">STORYSTREAM</a>
-            <a href="#workspace" class="nav-link" data-nav="workspace">WORKSPACE</a>
-            <a href="#profile" class="nav-link" data-nav="profile">DISPATCH</a>
+            <a href="#home" class="nav-link active" data-nav="home">HOME</a>
+            <a href="#studio" class="nav-link" data-nav="studio">STUDIO</a>
+            <a href="#community" class="nav-link" data-nav="community">COMMUNITY</a>
           </nav>
         </div>
 
@@ -73,497 +72,521 @@
             <span>+ NEW CANVAS</span>
           </button>
 
-          <a href="#profile" class="avatar-pill" title="Cal T. (@calpixel)" aria-label="Profile">CT</a>
+          <a href="#community" class="avatar-pill" data-nav-trigger="community" title="Cal T. (@calpixel)" aria-label="Profile">CT</a>
         </div>
       </div>
     </header>
 
     <div class="page-shell">
       <main id="mainContent">
-        <!-- 1. HERO MASTHEAD & LIVE STORYSTREAM RAIL -->
-        <section class="masthead-section" aria-labelledby="heroHeading">
-          <!-- Massive 107px Manuka Hero Wordmark Banner + Thin-Weight 300 Whisper Eyebrow -->
-          <div class="masthead-wordmark-bar">
-            <p class="whisper-eyebrow">Chiptune Soundboard Meets Pixel Art Flagship</p>
-            <div class="hero-wordmark-row">
-              <span class="hero-wordmark" aria-hidden="true">PIXAURA</span>
-              <div class="hero-wordmark-meta">
-                <span class="pill-tag ultraviolet-tag">ISSUE 042 // LIVE STREAM</span>
-                <span class="mono-timestamp">32×32 INTEGER GRID · 16 LAYERS · BAYER 4×4</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="intro-strip">
-            <!-- Left Feature Card (24px radius, 1px solid #ffffff hairline on #131313) -->
-            <div class="intro-copy">
-              <div class="pixel-tag-row">
-                <span class="pill-tag mint-tag">TOP STORY // STUDIO 2.4</span>
-                <span class="whisper-eyebrow">Pixel Console &amp; Animation Engine</span>
-              </div>
-              <!-- Secondary Display Manuka 90px (Section 3: never below 60px) -->
-              <h1 id="heroHeading" class="manuka-display-90">DRAW CRISP PIXELS. WIRE THE TIMELINE.</h1>
-              <!-- FK Roman Standard / Newsreader Serif Editorial Deck (Section 3: 16px, -0.16px tracking) -->
-              <p class="serif-deck">
-                A high-contrast darkroom built for sprite animators, synth-heads, and indie game makers. Paint directly on the 32×32 grid below, quantize reference photography with ordered Bayer matrices, or post to the live StoryStream.
-              </p>
-              <div class="cta-row">
-                <!-- Primary Jelly Mint Pill (24px radius) -->
-                <button class="px-btn primary" id="startDrawingBtn" type="button">JUMP TO CONSOLE</button>
-                <!-- Tertiary Outlined Mint Pill (40px radius, 1px solid #3cffd0, mono uppercase) -->
-                <button class="px-btn tertiary-mint" id="tryTemplateBtn" type="button">LOAD SAMPLE LOOP</button>
+        <!-- =================================================================
+             PAGE 1: HOME (Hero Section + Community Demo Preview)
+             ================================================================= -->
+        <div class="page-view active" id="pageHome" data-page-view="home">
+          <!-- 1A. HERO MASTHEAD & LIVE STORYSTREAM RAIL -->
+          <section class="masthead-section" aria-labelledby="heroHeading">
+            <div class="masthead-wordmark-bar">
+              <p class="whisper-eyebrow">Chiptune Soundboard Meets Pixel Art Flagship</p>
+              <div class="hero-wordmark-row">
+                <span class="hero-wordmark" aria-hidden="true">PIXAURA</span>
+                <div class="hero-wordmark-meta">
+                  <span class="pill-tag ultraviolet-tag">ISSUE 042 // LIVE STREAM</span>
+                  <span class="mono-timestamp">32×32 INTEGER GRID · 16 LAYERS · BAYER 4×4</span>
+                </div>
               </div>
             </div>
 
-            <!-- Right Column: StoryStream Live Sprite Commits on a 1px Purple Rule (#3d00bf) Spine -->
-            <div class="storystream-mini-rail" aria-label="Featured StoryStream sprites">
-              <div class="rail-header">
-                <span class="eyebrow-allcaps">STORYSTREAM // FEATURED COMMITS</span>
-                <span class="mono-timestamp">LIVE FEED</span>
+            <div class="intro-strip">
+              <!-- Left Feature Card (24px radius, 1px solid #ffffff hairline on #131313) -->
+              <div class="intro-copy">
+                <div class="pixel-tag-row">
+                  <span class="pill-tag mint-tag">TOP STORY // STUDIO 2.4</span>
+                  <span class="whisper-eyebrow">Pixel Console &amp; Animation Engine</span>
+                </div>
+                <h1 id="heroHeading" class="manuka-display-90">DRAW CRISP PIXELS. WIRE THE TIMELINE.</h1>
+                <p class="serif-deck">
+                  A high-contrast darkroom built for sprite animators, synth-heads, and indie game makers. Launch the interactive 32×32 studio console, quantize reference photography with ordered Bayer matrices, or explore the live StoryStream community.
+                </p>
+                <div class="cta-row">
+                  <button class="px-btn primary" id="startDrawingBtn" type="button">LAUNCH PIXEL STUDIO</button>
+                  <button class="px-btn tertiary-mint" id="tryTemplateBtn" type="button">LOAD SAMPLE LOOP</button>
+                </div>
               </div>
 
-              <div class="intro-featured-cards">
-                <!-- Saturated Jelly Mint Tile (#3cffd0 fill, #131313 inverted text, 20px radius) -->
-                <article class="mini-feature-card tile-mint" data-open-art="post-1" role="button" tabindex="0">
-                  <div class="rail-timestamp-col">
-                    <span class="mono-timestamp">16:20 UTC</span>
-                    <span class="pill-tag dark-tag">6F LOOP</span>
-                  </div>
-                  <div class="mini-stage">
-                    <canvas id="heroCanvasMain" width="32" height="32" aria-label="Disco Duck sprite"></canvas>
-                  </div>
-                  <div class="mini-card-info">
-                    <span class="eyebrow-allcaps">CHARACTERS</span>
-                    <strong>Disco Duck</strong>
-                    <span class="byline-micro">BY @DISCODUCK</span>
-                  </div>
-                </article>
+              <!-- Right Column: StoryStream Live Sprite Commits on a 1px Purple Rule (#3d00bf) Spine -->
+              <div class="storystream-mini-rail" aria-label="Featured StoryStream sprites">
+                <div class="rail-header">
+                  <span class="eyebrow-allcaps">STORYSTREAM // FEATURED COMMITS</span>
+                  <span class="mono-timestamp">LIVE FEED</span>
+                </div>
 
-                <!-- Saturated Verge Ultraviolet Tile (#5200ff fill at 0.9 alpha, white text, 20px radius) -->
-                <article class="mini-feature-card tile-ultraviolet" data-open-art="post-2" role="button" tabindex="0">
-                  <div class="rail-timestamp-col">
-                    <span class="mono-timestamp">15:42 UTC</span>
-                    <span class="pill-tag mint-tag">4F LOOP</span>
-                  </div>
-                  <div class="mini-stage">
-                    <canvas id="heroCanvasWide" width="32" height="32" aria-label="Night Mage sprite"></canvas>
-                  </div>
-                  <div class="mini-card-info">
-                    <span class="eyebrow-allcaps">GAME ASSETS</span>
-                    <strong>Night Mage</strong>
-                    <span class="byline-micro">BY @HEXMAGE</span>
-                  </div>
-                </article>
-
-                <!-- Saturated Rave Yellow Tile (#ffe600 fill, #131313 inverted text, 20px radius) -->
-                <article class="mini-feature-card tile-yellow" data-open-art="post-3" role="button" tabindex="0">
-                  <div class="rail-timestamp-col">
-                    <span class="mono-timestamp">14:18 UTC</span>
-                    <span class="pill-tag dark-tag">6F LOOP</span>
-                  </div>
-                  <div class="mini-card-info-wrap">
+                <div class="intro-featured-cards">
+                  <article class="mini-feature-card tile-mint" data-open-art="post-1" role="button" tabindex="0">
+                    <div class="rail-timestamp-col">
+                      <span class="mono-timestamp">16:20 UTC</span>
+                      <span class="pill-tag dark-tag">6F LOOP</span>
+                    </div>
                     <div class="mini-stage">
-                      <canvas id="heroCanvasSmall" width="32" height="32" aria-label="King Slime sprite"></canvas>
+                      <canvas id="heroCanvasMain" width="32" height="32" aria-label="Disco Duck sprite"></canvas>
                     </div>
                     <div class="mini-card-info">
-                      <span class="eyebrow-allcaps">BOSS SPRITE</span>
-                      <strong>King Slime</strong>
-                      <span class="byline-micro">BY @SLIMECRAFT</span>
+                      <span class="eyebrow-allcaps">CHARACTERS</span>
+                      <strong>Disco Duck</strong>
+                      <span class="byline-micro">BY @DISCODUCK</span>
                     </div>
-                  </div>
-                </article>
-              </div>
-            </div>
-          </div>
-        </section>
+                  </article>
 
-        <!-- 2. UNIFIED PIXEL STUDIO CONSOLE (24px Radius, 1px #ffffff Hairline, Zero Shadow) -->
-        <section class="studio-section" id="studio" aria-labelledby="studioSectionHeading">
-          <div class="section-masthead-row">
-            <div>
-              <p class="whisper-eyebrow">Interactive Frame-by-Frame Sprite Editor</p>
-              <!-- Tertiary Display Manuka 60px -->
-              <h2 id="studioSectionHeading" class="manuka-display-60">THE PIXEL CONSOLE</h2>
-            </div>
-            <div class="console-hazard-badges">
-              <span class="pill-tag mint-tag">ONION SKIN READY</span>
-              <span class="pill-tag ultraviolet-tag">16-LAYER STACK</span>
-            </div>
-          </div>
-
-          <div class="studio-shell">
-            <!-- Studio Top Toolbar -->
-            <div class="studio-topbar">
-              <div class="studio-title-group">
-                <span class="eyebrow-allcaps">PROJECT //</span>
-                <input
-                  id="studioProjectTitle"
-                  class="project-title-input"
-                  type="text"
-                  value="Disco Duck"
-                  maxlength="60"
-                  aria-label="Project title"
-                />
-                <span class="save-indicator" id="saveStatusBadge" title="Project auto-saved in browser">
-                  <span class="save-dot"></span>
-                  COMMITTED
-                </span>
-              </div>
-
-              <div class="studio-preset-bar" role="group" aria-label="Canvas presets">
-                <label class="studio-select-label" for="templateSelect">
-                  <span class="mono-timestamp">SAMPLE:</span>
-                  <select id="templateSelect" aria-label="Load sample project">
-                    <option value="duck">Disco Duck (6 Frames)</option>
-                    <option value="sunset">Sunset River (4 Frames)</option>
-                    <option value="slime">King Slime (6 Frames)</option>
-                    <option value="goblin">Night Mage (4 Frames)</option>
-                    <option value="cat">Cyber Cat (4 Frames)</option>
-                    <option value="sword">Crystal Sword (Static)</option>
-                    <option value="blank">Blank Canvas</option>
-                  </select>
-                </label>
-
-                <label class="studio-select-label" for="canvasSizeSelect">
-                  <span class="mono-timestamp">GRID:</span>
-                  <select id="canvasSizeSelect" aria-label="Canvas dimensions">
-                    <option value="16">16 × 16 PX</option>
-                    <option value="32" selected>32 × 32 PX</option>
-                    <option value="48">48 × 48 PX</option>
-                  </select>
-                </label>
-              </div>
-
-              <div class="studio-actions">
-                <button class="px-btn secondary small" id="undoBtn" type="button" title="Undo (Ctrl+Z)">
-                  <span>UNDO</span>
-                </button>
-                <button class="px-btn secondary small" id="redoBtn" type="button" title="Redo (Ctrl+Y)">
-                  <span>REDO</span>
-                </button>
-                <button class="px-btn secondary small" id="stampDuckBtn" type="button" title="Stamp a cute mini sprite onto active layer">
-                  <span>+ STAMP</span>
-                </button>
-                <button class="px-btn ultraviolet-outline small" id="studioConvertBtn" type="button">
-                  <span>IMPORT IMAGE</span>
-                </button>
-                <button class="px-btn tertiary-mint small" id="openExportModalBtn" type="button">
-                  <span>EXPORT PNG</span>
-                </button>
-                <button class="px-btn primary small" id="openPublishModalBtn" type="button">
-                  <span>PUBLISH TO STREAM</span>
-                </button>
-              </div>
-            </div>
-
-            <!-- 3-Column Editor Workspace -->
-            <div class="studio-workspace">
-              <!-- Left Dock: Tools & Brush Settings -->
-              <aside class="studio-dock left-dock" aria-label="Drawing tools">
-                <div class="dock-section">
-                  <div class="dock-head">
-                    <h3>TOOLS</h3>
-                    <span class="mono-timestamp" id="activeToolLabel">PENCIL (B)</span>
-                  </div>
-
-                  <div class="tool-grid" role="toolbar" aria-label="Pixel tools">
-                    <button class="tool-btn active" data-tool="pencil" type="button" title="Pencil (B)" aria-label="Pencil">
-                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
-                      <span class="tool-name">PENCIL</span>
-                    </button>
-                    <button class="tool-btn" data-tool="eraser" type="button" title="Eraser (E)" aria-label="Eraser">
-                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/></svg>
-                      <span class="tool-name">ERASER</span>
-                    </button>
-                    <button class="tool-btn" data-tool="fill" type="button" title="Fill Bucket (G)" aria-label="Fill Bucket">
-                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 11-8-8-8.6 8.6a2 2 0 0 0 0 2.8l5.2 5.2c.8.8 2 .8 2.8 0L19 11Z"/><path d="m5 2 5 5"/><path d="M2 13h15"/><path d="M22 20a2 2 0 1 1-4 0c0-1.6 1.7-2.4 2-4 .3 1.6 2 2.4 2 4Z"/></svg>
-                      <span class="tool-name">BUCKET</span>
-                    </button>
-                    <button class="tool-btn" data-tool="eyedropper" type="button" title="Color Picker (I)" aria-label="Eyedropper">
-                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="m2 22 1-1h3l9-9"/><path d="M3 21v-3l9-9"/><path d="m15 6 3.4-3.4a2.1 2.1 0 1 1 3 3L18 9l.4.4a2.1 2.1 0 1 1-3 3l-3.8-3.8a2.1 2.1 0 1 1 3-3l.4.4Z"/></svg>
-                      <span class="tool-name">PICKER</span>
-                    </button>
-                    <button class="tool-btn" data-tool="line" type="button" title="Line Tool (L)" aria-label="Line">
-                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="19" x2="19" y2="5"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="5" r="2"/></svg>
-                      <span class="tool-name">LINE</span>
-                    </button>
-                    <button class="tool-btn" data-tool="rect" type="button" title="Rectangle (R)" aria-label="Rectangle">
-                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14"/></svg>
-                      <span class="tool-name">RECT</span>
-                    </button>
-                    <button class="tool-btn" data-tool="circle" type="button" title="Circle (C)" aria-label="Circle">
-                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>
-                      <span class="tool-name">CIRCLE</span>
-                    </button>
-                    <button class="tool-btn" data-tool="mirror" type="button" title="Mirror Symmetry Pencil (M)" aria-label="Mirror">
-                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="3" x2="12" y2="21" stroke-dasharray="2 2"/><polygon points="4 7 9 12 4 17 4 7"/><polygon points="20 7 15 12 20 17 20 7"/></svg>
-                      <span class="tool-name">MIRROR</span>
-                    </button>
-                  </div>
-                </div>
-
-                <div class="dock-section">
-                  <div class="control-label-row">
-                    <label for="brushSizeInput">Brush Size</label>
-                    <span class="mono-val" id="brushSizeVal">1 PX</span>
-                  </div>
-                  <input id="brushSizeInput" type="range" min="1" max="5" value="1" />
-
-                  <div class="toggle-group">
-                    <label class="toggle-row" for="shapeFillToggle">
-                      <span>Fill Shapes / Global Bucket</span>
-                      <input id="shapeFillToggle" type="checkbox" />
-                    </label>
-                    <label class="toggle-row" for="gridToggle">
-                      <span>Pixel Grid Overlay</span>
-                      <input id="gridToggle" type="checkbox" checked />
-                    </label>
-                    <label class="toggle-row" for="onionSkinToggle">
-                      <span>Onion Skin (Prev/Next)</span>
-                      <input id="onionSkinToggle" type="checkbox" />
-                    </label>
-                  </div>
-                </div>
-
-                <div class="dock-section">
-                  <div class="control-label-row">
-                    <label for="zoomRangeInput">Canvas Zoom</label>
-                    <span class="mono-val" id="zoomLevelText">100%</span>
-                  </div>
-                  <input id="zoomRangeInput" type="range" min="100" max="200" step="25" value="100" />
-
-                  <div class="dock-btn-stack">
-                    <button class="px-btn secondary small full-w" id="flipHBtn" type="button">FLIP HORIZONTAL</button>
-                    <button class="px-btn tertiary-mint small full-w" id="clearLayerBtn" type="button">CLEAR LAYER</button>
-                  </div>
-                </div>
-              </aside>
-
-              <!-- Center Canvas Stage (Neutral #131313 Dark Surround with 1px #3cffd0 Frame) -->
-              <div class="canvas-center-stage">
-                <div class="canvas-status-bar">
-                  <div class="status-left">
-                    <span class="status-item" id="canvasDimReadout">32 × 32 PX</span>
-                    <span class="status-sep">//</span>
-                    <span class="status-item" id="activeLayerReadout">LAYER: DETAILS &amp; FX</span>
-                    <span class="status-sep">//</span>
-                    <span class="status-item" id="activeFrameReadout">FRAME 1 / 6</span>
-                  </div>
-                  <div class="status-right">
-                    <span class="mono-timestamp" id="cursorCoordReadout">X: --, Y: --</span>
-                  </div>
-                </div>
-
-                <div class="canvas-viewport" id="canvasViewportWrap">
-                  <div class="canvas-checkerboard" id="canvasStageBox">
-                    <canvas
-                      id="editorCanvas"
-                      width="32"
-                      height="32"
-                      aria-label="Interactive pixel art canvas"
-                    ></canvas>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Right Dock: Mini-Preview, Palette & Layers -->
-              <aside class="studio-dock right-dock" aria-label="Preview, colors, and layers">
-                <!-- Live Preview -->
-                <div class="dock-section">
-                  <div class="dock-head">
-                    <h3>LIVE PREVIEW</h3>
-                    <span class="mono-timestamp" id="previewFpsBadge">8 FPS</span>
-                  </div>
-                  <div class="mini-preview-box">
-                    <canvas id="miniPreviewCanvas" width="32" height="32" aria-label="Live animation preview"></canvas>
-                  </div>
-                </div>
-
-                <!-- Color Palette -->
-                <div class="dock-section">
-                  <div class="dock-head">
-                    <h3>PALETTE</h3>
-                    <select id="palettePresetSelect" class="compact-select" aria-label="Select palette preset">
-                      <option value="verge" selected>Verge Hazard</option>
-                      <option value="pixaura">Pixil Default</option>
-                      <option value="pico8">PICO-8 (16)</option>
-                      <option value="sunset">Warm Lo-Fi</option>
-                      <option value="gameboy">GameBoy 4-Bit</option>
-                    </select>
-                  </div>
-
-                  <div class="active-color-bar">
-                    <label class="color-picker-wrap" for="customColorPicker" title="Choose custom color">
-                      <input id="customColorPicker" type="color" value="#3cffd0" aria-label="Custom color picker" />
-                      <span class="color-hex-label" id="activeColorHex">#3CFFD0</span>
-                    </label>
-                    <button class="px-btn tertiary-mint tiny" id="addColorSwatchBtn" type="button">+ ADD</button>
-                  </div>
-
-                  <div class="palette-list" id="paletteContainer" role="listbox" aria-label="Color palette swatches"></div>
-                </div>
-
-                <!-- Layers Stack -->
-                <div class="dock-section layers-section">
-                  <div class="dock-head">
-                    <h3>LAYERS</h3>
-                    <div class="layer-head-btns">
-                      <button class="px-btn tertiary-mint tiny" id="addLayerBtn" type="button" title="New layer">+ NEW</button>
-                      <button class="px-btn secondary tiny" id="dupLayerBtn" type="button" title="Duplicate layer">DUP</button>
+                  <article class="mini-feature-card tile-ultraviolet" data-open-art="post-2" role="button" tabindex="0">
+                    <div class="rail-timestamp-col">
+                      <span class="mono-timestamp">15:42 UTC</span>
+                      <span class="pill-tag mint-tag">4F LOOP</span>
                     </div>
-                  </div>
+                    <div class="mini-stage">
+                      <canvas id="heroCanvasWide" width="32" height="32" aria-label="Night Mage sprite"></canvas>
+                    </div>
+                    <div class="mini-card-info">
+                      <span class="eyebrow-allcaps">GAME ASSETS</span>
+                      <strong>Night Mage</strong>
+                      <span class="byline-micro">BY @HEXMAGE</span>
+                    </div>
+                  </article>
 
-                  <div class="layer-opacity-row">
-                    <label for="layerOpacitySlider">Opacity</label>
-                    <input id="layerOpacitySlider" type="range" min="10" max="100" value="100" />
-                    <span class="mono-timestamp" id="layerOpacityVal">100%</span>
-                  </div>
-
-                  <ul class="layer-list" id="layerListContainer" aria-label="Layers list"></ul>
+                  <article class="mini-feature-card tile-yellow" data-open-art="post-3" role="button" tabindex="0">
+                    <div class="rail-timestamp-col">
+                      <span class="mono-timestamp">14:18 UTC</span>
+                      <span class="pill-tag dark-tag">6F LOOP</span>
+                    </div>
+                    <div class="mini-card-info-wrap">
+                      <div class="mini-stage">
+                        <canvas id="heroCanvasSmall" width="32" height="32" aria-label="King Slime sprite"></canvas>
+                      </div>
+                      <div class="mini-card-info">
+                        <span class="eyebrow-allcaps">BOSS SPRITE</span>
+                        <strong>King Slime</strong>
+                        <span class="byline-micro">BY @SLIMECRAFT</span>
+                      </div>
+                    </div>
+                  </article>
                 </div>
-              </aside>
+              </div>
+            </div>
+          </section>
+
+          <!-- 1B. HOME COMMUNITY DEMO PREVIEW SECTION -->
+          <section class="gallery-section home-community-demo" aria-labelledby="homeCommunityDemoHeading">
+            <div class="section-header-bar">
+              <div>
+                <p class="whisper-eyebrow">Trending Dispatches from the Feed</p>
+                <h2 id="homeCommunityDemoHeading" class="manuka-display-60">COMMUNITY DEMO</h2>
+              </div>
+              <div class="cta-row" style="margin-top: 0">
+                <button class="px-btn tertiary-mint" type="button" data-nav-trigger="studio">OPEN PIXEL STUDIO</button>
+                <button class="px-btn primary" type="button" data-nav-trigger="community">EXPLORE FULL COMMUNITY →</button>
+              </div>
             </div>
 
-            <!-- Bottom Animation Timeline Bar -->
-            <div class="timeline-bar" aria-label="Animation timeline">
-              <div class="timeline-head">
-                <div class="timeline-title-wrap">
-                  <h3>TIMELINE RAIL</h3>
-                  <span class="pill-tag mint-tag" id="frameCountBadge">6 FRAMES</span>
-                </div>
+            <div class="storystream-feed-rail">
+              <div id="homeCommunityDemoGrid" class="gallery-grid"></div>
+            </div>
+          </section>
+        </div>
 
-                <div class="timeline-controls">
-                  <button class="px-btn primary tiny" id="playPauseAnimBtn" type="button">
-                    <span id="playBtnText">PAUSE</span>
-                  </button>
-                  <button class="px-btn tertiary-mint tiny" id="addFrameBtn" type="button">+ FRAME</button>
-                  <button class="px-btn secondary tiny" id="dupFrameBtn" type="button">DUPLICATE</button>
-                  <button class="px-btn secondary tiny" id="deleteFrameBtn" type="button">DELETE</button>
-
+        <!-- =================================================================
+             PAGE 2: STUDIO (Full Pixel Console + Personal Workspace)
+             ================================================================= -->
+        <div class="page-view hidden" id="pageStudio" data-page-view="studio">
+          <!-- 2. UNIFIED PIXEL STUDIO CONSOLE (Full-Viewport Fit: Tools + Canvas + Timeline Rail + Inspector + Workspace) -->
+          <section class="studio-section" id="studio" aria-labelledby="studioSectionHeading">
+            <div class="studio-shell">
+              <!-- Studio Top Toolbar (Merged Console Masthead + Project Controls + Actions) -->
+              <div class="studio-topbar">
+                <div class="studio-title-group">
+                  <div class="console-brand-pill">
+                    <span class="whisper-eyebrow console-eyebrow-inline">CONSOLE</span>
+                    <h2 id="studioSectionHeading" class="studio-inline-heading">THE PIXEL CONSOLE</h2>
+                  </div>
                   <span class="divider-v" aria-hidden="true"></span>
+                  <span class="eyebrow-allcaps">PROJECT //</span>
+                  <input
+                    id="studioProjectTitle"
+                    class="project-title-input"
+                    type="text"
+                    value="Disco Duck"
+                    maxlength="60"
+                    aria-label="Project title"
+                  />
+                  <span class="save-indicator" id="saveStatusBadge" title="Project auto-saved in browser">
+                    <span class="save-dot"></span>
+                    COMMITTED
+                  </span>
+                </div>
 
-                  <label class="fps-control" for="fpsSlider">
-                    <span class="mono-timestamp">SPEED</span>
-                    <input id="fpsSlider" type="range" min="1" max="24" value="8" />
-                    <strong class="mono-timestamp" id="fpsReadout">8 FPS</strong>
+                <div class="studio-preset-bar" role="group" aria-label="Canvas presets">
+                  <label class="studio-select-label" for="templateSelect">
+                    <span class="mono-timestamp">SAMPLE:</span>
+                    <select id="templateSelect" aria-label="Load sample project">
+                      <option value="duck">Disco Duck (6 Frames)</option>
+                      <option value="sunset">Sunset River (4 Frames)</option>
+                      <option value="slime">King Slime (6 Frames)</option>
+                      <option value="goblin">Night Mage (4 Frames)</option>
+                      <option value="cat">Cyber Cat (4 Frames)</option>
+                      <option value="sword">Crystal Sword (Static)</option>
+                      <option value="blank">Blank Canvas</option>
+                    </select>
                   </label>
 
-                  <label class="fps-control" for="loopModeSelect">
-                    <span class="mono-timestamp">LOOP</span>
-                    <select id="loopModeSelect" class="compact-select" aria-label="Loop mode">
-                      <option value="forward">FORWARD</option>
-                      <option value="pingpong">PING-PONG</option>
-                      <option value="once">ONCE</option>
+                  <label class="studio-select-label" for="canvasSizeSelect">
+                    <span class="mono-timestamp">GRID:</span>
+                    <select id="canvasSizeSelect" aria-label="Canvas dimensions">
+                      <option value="16">16 × 16 PX</option>
+                      <option value="32" selected>32 × 32 PX</option>
+                      <option value="48">48 × 48 PX</option>
                     </select>
                   </label>
                 </div>
-              </div>
 
-              <div class="frames-row" id="timelineFramesContainer" role="listbox" aria-label="Frames"></div>
-            </div>
-          </div>
-        </section>
-
-        <!-- 3. STORYSTREAM COMMUNITY FEED (Section 1 & 4: Timeline Rail + Saturated Color-Block Tiles) -->
-        <section class="gallery-section" id="explore" aria-labelledby="galleryHeading">
-          <div class="section-header-bar">
-            <div>
-              <p class="whisper-eyebrow">Live Commits, Sprite Loops &amp; Rave Flyers</p>
-              <!-- Secondary Display Manuka 90px -->
-              <h2 id="galleryHeading" class="manuka-display-90">STORYSTREAM</h2>
-            </div>
-
-            <div class="filter-bar">
-              <div class="filter-group" id="categoryFilterGroup" role="group" aria-label="Category filter">
-                <button class="chip active" data-category="all" type="button">ALL</button>
-                <button class="chip" data-category="Characters" type="button">CHARACTERS</button>
-                <button class="chip" data-category="Game Assets" type="button">GAME ASSETS</button>
-                <button class="chip" data-category="Scenery" type="button">SCENERY</button>
-                <button class="chip" data-category="Cyberpunk" type="button">CYBERPUNK</button>
-              </div>
-
-              <div class="filter-group" id="formatFilterGroup" role="group" aria-label="Format filter">
-                <button class="chip subtle active" data-format="all" type="button">ALL FORMATS</button>
-                <button class="chip subtle" data-format="animated" type="button">GIFS</button>
-                <button class="chip subtle" data-format="static" type="button">STATIC</button>
-              </div>
-
-              <div class="filter-group" id="sortFilterGroup" role="group" aria-label="Sort order">
-                <button class="chip subtle active" data-sort="trending" type="button">POPULAR</button>
-                <button class="chip subtle" data-sort="recent" type="button">RECENT</button>
-                <button class="chip subtle" data-sort="following" type="button">FOLLOWING</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- StoryStream Rail Wrapper (1px Purple Rule #3d00bf spine on the left) -->
-          <div class="storystream-feed-rail">
-            <div id="galleryGrid" class="gallery-grid"></div>
-          </div>
-        </section>
-
-        <!-- 4. PERSONAL WORKSPACE -->
-        <section class="workspace-section" id="workspace" aria-labelledby="workspaceHeading">
-          <div class="section-header-bar">
-            <div>
-              <p class="whisper-eyebrow">Local Drafts, Quantized Sources &amp; Saved Tiles</p>
-              <h2 id="workspaceHeading" class="manuka-display-60">WORKSPACE</h2>
-            </div>
-            <div class="workspace-tabs" role="tablist" aria-label="Workspace tabs">
-              <button class="chip active" data-wtab="drafts" role="tab" aria-selected="true" type="button">
-                DRAFTS (<span id="countDrafts">4</span>)
-              </button>
-              <button class="chip" data-wtab="published" role="tab" aria-selected="false" type="button">
-                PUBLISHED (<span id="countPublished">6</span>)
-              </button>
-              <button class="chip" data-wtab="references" role="tab" aria-selected="false" type="button">
-                REFERENCE IMAGES (<span id="countRefs">3</span>)
-              </button>
-              <button class="chip" data-wtab="bookmarks" role="tab" aria-selected="false" type="button">
-                BOOKMARKS (<span id="countBookmarks">2</span>)
-              </button>
-            </div>
-          </div>
-
-          <div class="workspace-items-grid" id="workspaceItemsGrid"></div>
-        </section>
-
-        <!-- 5. CREATOR DISPATCH & PROFILE (With FK Roman Standard Serif Pull Quote & Color-Block Accent Tile) -->
-        <section class="profile-section" id="profile" aria-labelledby="profileNameHeading">
-          <div class="profile-banner">
-            <div class="profile-identity">
-              <div class="profile-avatar">CT</div>
-              <div class="profile-bio-block">
-                <div class="profile-name-row">
-                  <h2 id="profileNameHeading" class="heading-large">Cal T.</h2>
-                  <span class="pill-tag mint-tag">SENIOR PIXEL EDITOR</span>
-                  <span class="pill-tag ultraviolet-tag">VERIFIED STREAMER</span>
+                <div class="studio-actions">
+                  <button class="px-btn secondary small" id="undoBtn" type="button" title="Undo (Ctrl+Z)">
+                    <span>UNDO</span>
+                  </button>
+                  <button class="px-btn secondary small" id="redoBtn" type="button" title="Redo (Ctrl+Y)">
+                    <span>REDO</span>
+                  </button>
+                  <button class="px-btn secondary small" id="stampDuckBtn" type="button" title="Stamp a cute mini sprite onto active layer">
+                    <span>+ STAMP</span>
+                  </button>
+                  <button class="px-btn ultraviolet-outline small" id="studioConvertBtn" type="button">
+                    <span>IMPORT IMAGE</span>
+                  </button>
+                  <button class="px-btn tertiary-mint small" id="openExportModalBtn" type="button">
+                    <span>EXPORT PNG</span>
+                  </button>
+                  <button class="px-btn primary small" id="openPublishModalBtn" type="button">
+                    <span>PUBLISH TO STREAM</span>
+                  </button>
                 </div>
-                <p class="mono-timestamp">@CALPIXEL // JOINED 2025 // COMMITS: 142</p>
-                <!-- FK Roman Standard / Newsreader Serif Pull Quote (Section 3: 20px / 1.20) -->
-                <blockquote class="serif-pullquote">
-                  “Every 32×32 frame is a miniature synth patch—tight constraints, zero anti-aliasing, and maximum hazard contrast.”
-                </blockquote>
+              </div>
+
+              <!-- 4-Column Full-Screen Studio Workspace (Tools | Canvas + Timeline Rail | Preview/Palette/Layers | Personal Workspace) -->
+              <div class="studio-workspace">
+                <!-- Col 1: Left Dock (Tools & Brush Settings) -->
+                <aside class="studio-dock left-dock" aria-label="Drawing tools">
+                  <div class="dock-section">
+                    <div class="dock-head">
+                      <h3>TOOLS</h3>
+                      <span class="mono-timestamp" id="activeToolLabel">PENCIL (B)</span>
+                    </div>
+
+                    <div class="tool-grid" role="toolbar" aria-label="Pixel tools">
+                      <button class="tool-btn active" data-tool="pencil" type="button" title="Pencil (B)" aria-label="Pencil">
+                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+                        <span class="tool-name">PENCIL</span>
+                      </button>
+                      <button class="tool-btn" data-tool="eraser" type="button" title="Eraser (E)" aria-label="Eraser">
+                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/></svg>
+                        <span class="tool-name">ERASER</span>
+                      </button>
+                      <button class="tool-btn" data-tool="fill" type="button" title="Fill Bucket (G)" aria-label="Fill Bucket">
+                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 11-8-8-8.6 8.6a2 2 0 0 0 0 2.8l5.2 5.2c.8.8 2 .8 2.8 0L19 11Z"/><path d="m5 2 5 5"/><path d="M2 13h15"/><path d="M22 20a2 2 0 1 1-4 0c0-1.6 1.7-2.4 2-4 .3 1.6 2 2.4 2 4Z"/></svg>
+                        <span class="tool-name">BUCKET</span>
+                      </button>
+                      <button class="tool-btn" data-tool="eyedropper" type="button" title="Color Picker (I)" aria-label="Eyedropper">
+                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="m2 22 1-1h3l9-9"/><path d="M3 21v-3l9-9"/><path d="m15 6 3.4-3.4a2.1 2.1 0 1 1 3 3L18 9l.4.4a2.1 2.1 0 1 1-3 3l-3.8-3.8a2.1 2.1 0 1 1 3-3l.4.4Z"/></svg>
+                        <span class="tool-name">PICKER</span>
+                      </button>
+                      <button class="tool-btn" data-tool="line" type="button" title="Line Tool (L)" aria-label="Line">
+                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="19" x2="19" y2="5"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="5" r="2"/></svg>
+                        <span class="tool-name">LINE</span>
+                      </button>
+                      <button class="tool-btn" data-tool="rect" type="button" title="Rectangle (R)" aria-label="Rectangle">
+                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14"/></svg>
+                        <span class="tool-name">RECT</span>
+                      </button>
+                      <button class="tool-btn" data-tool="circle" type="button" title="Circle (C)" aria-label="Circle">
+                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>
+                        <span class="tool-name">CIRCLE</span>
+                      </button>
+                      <button class="tool-btn" data-tool="mirror" type="button" title="Mirror Symmetry Pencil (M)" aria-label="Mirror">
+                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="3" x2="12" y2="21" stroke-dasharray="2 2"/><polygon points="4 7 9 12 4 17 4 7"/><polygon points="20 7 15 12 20 17 20 7"/></svg>
+                        <span class="tool-name">MIRROR</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="dock-section">
+                    <div class="control-label-row">
+                      <label for="brushSizeInput">Brush Size</label>
+                      <span class="mono-val" id="brushSizeVal">1 PX</span>
+                    </div>
+                    <input id="brushSizeInput" type="range" min="1" max="5" value="1" />
+
+                    <div class="toggle-group">
+                      <label class="toggle-row" for="shapeFillToggle">
+                        <span>Fill Shapes / Bucket</span>
+                        <input id="shapeFillToggle" type="checkbox" />
+                      </label>
+                      <label class="toggle-row" for="gridToggle">
+                        <span>Pixel Grid Overlay</span>
+                        <input id="gridToggle" type="checkbox" checked />
+                      </label>
+                      <label class="toggle-row" for="onionSkinToggle">
+                        <span>Onion Skin (Prev/Next)</span>
+                        <input id="onionSkinToggle" type="checkbox" />
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="dock-section dock-section-grow">
+                    <div class="control-label-row">
+                      <label for="zoomRangeInput">Canvas Zoom</label>
+                      <span class="mono-val" id="zoomLevelText">100%</span>
+                    </div>
+                    <input id="zoomRangeInput" type="range" min="100" max="200" step="25" value="100" />
+
+                    <div class="dock-btn-stack">
+                      <button class="px-btn secondary small full-w" id="flipHBtn" type="button">FLIP H</button>
+                      <button class="px-btn tertiary-mint small full-w" id="clearLayerBtn" type="button">CLEAR</button>
+                    </div>
+
+                    <div class="console-hazard-badges">
+                      <span class="pill-tag mint-tag">ONION SKIN READY</span>
+                      <span class="pill-tag ultraviolet-tag">16-LAYER STACK</span>
+                    </div>
+                  </div>
+                </aside>
+
+                <!-- Col 2: Center Canvas Stage + Attached Bottom Timeline Rail -->
+                <div class="canvas-center-stage">
+                  <div class="canvas-status-bar">
+                    <div class="status-left">
+                      <span class="status-item" id="canvasDimReadout">32 × 32 PX</span>
+                      <span class="status-sep">//</span>
+                      <span class="status-item" id="activeLayerReadout">LAYER: DETAILS &amp; FX</span>
+                      <span class="status-sep">//</span>
+                      <span class="status-item" id="activeFrameReadout">FRAME 1 / 6</span>
+                    </div>
+                    <div class="status-right">
+                      <span class="mono-timestamp" id="cursorCoordReadout">X: --, Y: --</span>
+                    </div>
+                  </div>
+
+                  <div class="canvas-viewport" id="canvasViewportWrap">
+                    <div class="canvas-checkerboard" id="canvasStageBox">
+                      <canvas
+                        id="editorCanvas"
+                        width="32"
+                        height="32"
+                        aria-label="Interactive pixel art canvas"
+                      ></canvas>
+                    </div>
+                  </div>
+
+                  <!-- Attached Bottom Animation Timeline Rail (Inside Center Stage so it never overflows off-screen) -->
+                  <div class="timeline-bar" aria-label="Animation timeline">
+                    <div class="timeline-head">
+                      <div class="timeline-title-wrap">
+                        <h3>TIMELINE RAIL</h3>
+                        <span class="pill-tag mint-tag" id="frameCountBadge">6 FRAMES</span>
+                      </div>
+
+                      <div class="timeline-controls">
+                        <button class="px-btn primary tiny" id="playPauseAnimBtn" type="button">
+                          <span id="playBtnText">PAUSE</span>
+                        </button>
+                        <button class="px-btn tertiary-mint tiny" id="addFrameBtn" type="button">+ FRAME</button>
+                        <button class="px-btn secondary tiny" id="dupFrameBtn" type="button">DUP</button>
+                        <button class="px-btn secondary tiny" id="deleteFrameBtn" type="button">DEL</button>
+
+                        <span class="divider-v" aria-hidden="true"></span>
+
+                        <label class="fps-control" for="fpsSlider">
+                          <span class="mono-timestamp">SPEED</span>
+                          <input id="fpsSlider" type="range" min="1" max="24" value="8" />
+                          <strong class="mono-timestamp" id="fpsReadout">8 FPS</strong>
+                        </label>
+
+                        <label class="fps-control" for="loopModeSelect">
+                          <span class="mono-timestamp">LOOP</span>
+                          <select id="loopModeSelect" class="compact-select" aria-label="Loop mode">
+                            <option value="forward">FORWARD</option>
+                            <option value="pingpong">PING-PONG</option>
+                            <option value="once">ONCE</option>
+                          </select>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="frames-row" id="timelineFramesContainer" role="listbox" aria-label="Frames"></div>
+                  </div>
+                </div>
+
+                <!-- Col 3: Right Dock (Mini-Preview, Palette & Layers) -->
+                <aside class="studio-dock right-dock" aria-label="Preview, colors, and layers">
+                  <!-- Live Preview + Active Color -->
+                  <div class="dock-section">
+                    <div class="dock-head">
+                      <h3>LIVE PREVIEW</h3>
+                      <span class="mono-timestamp" id="previewFpsBadge">8 FPS</span>
+                    </div>
+                    <div class="mini-preview-box">
+                      <canvas id="miniPreviewCanvas" width="32" height="32" aria-label="Live animation preview"></canvas>
+                      <div class="mini-preview-meta">
+                        <span class="eyebrow-allcaps">REALTIME LOOP</span>
+                        <label class="color-picker-wrap" for="customColorPicker" title="Choose custom color">
+                          <input id="customColorPicker" type="color" value="#3cffd0" aria-label="Custom color picker" />
+                          <span class="color-hex-label" id="activeColorHex">#3CFFD0</span>
+                        </label>
+                        <button class="px-btn tertiary-mint tiny full-w" id="addColorSwatchBtn" type="button">+ ADD SWATCH</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Color Palette -->
+                  <div class="dock-section">
+                    <div class="dock-head">
+                      <h3>PALETTE</h3>
+                      <select id="palettePresetSelect" class="compact-select" aria-label="Select palette preset">
+                        <option value="verge" selected>Verge Hazard</option>
+                        <option value="pixaura">Pixil Default</option>
+                        <option value="pico8">PICO-8 (16)</option>
+                        <option value="sunset">Warm Lo-Fi</option>
+                        <option value="gameboy">GameBoy 4-Bit</option>
+                      </select>
+                    </div>
+
+                    <div class="palette-list" id="paletteContainer" role="listbox" aria-label="Color palette swatches"></div>
+                  </div>
+
+                  <!-- Layers Stack -->
+                  <div class="dock-section layers-section">
+                    <div class="dock-head">
+                      <h3>LAYERS</h3>
+                      <div class="layer-head-btns">
+                        <button class="px-btn tertiary-mint tiny" id="addLayerBtn" type="button" title="New layer">+ NEW</button>
+                        <button class="px-btn secondary tiny" id="dupLayerBtn" type="button" title="Duplicate layer">DUP</button>
+                      </div>
+                    </div>
+
+                    <div class="layer-opacity-row">
+                      <label for="layerOpacitySlider">Opacity</label>
+                      <input id="layerOpacitySlider" type="range" min="10" max="100" value="100" />
+                      <span class="mono-timestamp" id="layerOpacityVal">100%</span>
+                    </div>
+
+                    <ul class="layer-list" id="layerListContainer" aria-label="Layers list"></ul>
+                  </div>
+                </aside>
+
+                <!-- Col 4: Personal Workspace Dock (Attached directly in Studio Grid so it fits on screen without scrolling) -->
+                <section class="workspace-section studio-dock workspace-dock" id="workspace" aria-labelledby="workspaceHeading">
+                  <div class="dock-section workspace-dock-header">
+                    <div class="dock-head">
+                      <div>
+                        <p class="whisper-eyebrow workspace-eyebrow">Local Drafts &amp; Saved Tiles</p>
+                        <h2 id="workspaceHeading" class="workspace-dock-title">WORKSPACE</h2>
+                      </div>
+                      <span class="pill-tag mint-tag">SYNCED</span>
+                    </div>
+                    <div class="workspace-tabs" role="tablist" aria-label="Workspace tabs">
+                      <button class="chip active" data-wtab="drafts" role="tab" aria-selected="true" type="button">
+                        DRAFTS (<span id="countDrafts">4</span>)
+                      </button>
+                      <button class="chip" data-wtab="published" role="tab" aria-selected="false" type="button">
+                        PUBLISHED (<span id="countPublished">6</span>)
+                      </button>
+                      <button class="chip" data-wtab="references" role="tab" aria-selected="false" type="button">
+                        SOURCES (<span id="countRefs">3</span>)
+                      </button>
+                      <button class="chip" data-wtab="bookmarks" role="tab" aria-selected="false" type="button">
+                        SAVED (<span id="countBookmarks">2</span>)
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="workspace-items-grid" id="workspaceItemsGrid"></div>
+                </section>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- =================================================================
+             PAGE 3: FULL COMMUNITY PAGE (StoryStream Feed + Creator Dispatch)
+             ================================================================= -->
+        <div class="page-view hidden" id="pageCommunity" data-page-view="community">
+          <!-- 3. STORYSTREAM COMMUNITY FEED (Section 1 & 4: Timeline Rail + Saturated Color-Block Tiles) -->
+          <section class="gallery-section" id="explore" aria-labelledby="galleryHeading" style="border-top: none; padding-top: 0; margin-top: 0">
+            <div class="section-header-bar">
+              <div>
+                <p class="whisper-eyebrow">Live Commits, Sprite Loops &amp; Rave Flyers</p>
+                <h2 id="galleryHeading" class="manuka-display-90">STORYSTREAM</h2>
+              </div>
+
+              <div class="filter-bar">
+                <div class="filter-group" id="categoryFilterGroup" role="group" aria-label="Category filter">
+                  <button class="chip active" data-category="all" type="button">ALL</button>
+                  <button class="chip" data-category="Characters" type="button">CHARACTERS</button>
+                  <button class="chip" data-category="Game Assets" type="button">GAME ASSETS</button>
+                  <button class="chip" data-category="Scenery" type="button">SCENERY</button>
+                  <button class="chip" data-category="Cyberpunk" type="button">CYBERPUNK</button>
+                </div>
+
+                <div class="filter-group" id="formatFilterGroup" role="group" aria-label="Format filter">
+                  <button class="chip subtle active" data-format="all" type="button">ALL FORMATS</button>
+                  <button class="chip subtle" data-format="animated" type="button">GIFS</button>
+                  <button class="chip subtle" data-format="static" type="button">STATIC</button>
+                </div>
+
+                <div class="filter-group" id="sortFilterGroup" role="group" aria-label="Sort order">
+                  <button class="chip subtle active" data-sort="trending" type="button">POPULAR</button>
+                  <button class="chip subtle" data-sort="recent" type="button">RECENT</button>
+                  <button class="chip subtle" data-sort="following" type="button">FOLLOWING</button>
+                </div>
               </div>
             </div>
 
-            <div class="profile-stats-card">
-              <div class="p-stat">
-                <strong>2.4K</strong>
-                <span class="mono-timestamp">FOLLOWERS</span>
-              </div>
-              <div class="p-stat">
-                <strong>318</strong>
-                <span class="mono-timestamp">FOLLOWING</span>
-              </div>
-              <div class="p-stat">
-                <strong id="profileTotalLikes">19.4K</strong>
-                <span class="mono-timestamp">UPVOTES</span>
-              </div>
-              <button class="px-btn tertiary-mint small" id="copyProfileLinkBtn" type="button">SHARE DISPATCH</button>
+            <!-- StoryStream Rail Wrapper (1px Purple Rule #3d00bf spine on the left) -->
+            <div class="storystream-feed-rail">
+              <div id="galleryGrid" class="gallery-grid"></div>
             </div>
-          </div>
-        </section>
+          </section>
+
+          <!-- 5. CREATOR DISPATCH & PROFILE -->
+          <section class="profile-section" id="profile" aria-labelledby="profileNameHeading">
+            <div class="profile-banner">
+              <div class="profile-identity">
+                <div class="profile-avatar">CT</div>
+                <div class="profile-bio-block">
+                  <div class="profile-name-row">
+                    <h2 id="profileNameHeading" class="heading-large">Cal T.</h2>
+                    <span class="pill-tag mint-tag">SENIOR PIXEL EDITOR</span>
+                    <span class="pill-tag ultraviolet-tag">VERIFIED STREAMER</span>
+                  </div>
+                  <p class="mono-timestamp">@CALPIXEL // JOINED 2025 // COMMITS: 142</p>
+                  <blockquote class="serif-pullquote">
+                    “Every 32×32 frame is a miniature synth patch—tight constraints, zero anti-aliasing, and maximum hazard contrast.”
+                  </blockquote>
+                </div>
+              </div>
+
+              <div class="profile-stats-card">
+                <div class="p-stat">
+                  <strong>2.4K</strong>
+                  <span class="mono-timestamp">FOLLOWERS</span>
+                </div>
+                <div class="p-stat">
+                  <strong>318</strong>
+                  <span class="mono-timestamp">FOLLOWING</span>
+                </div>
+                <div class="p-stat">
+                  <strong id="profileTotalLikes">19.4K</strong>
+                  <span class="mono-timestamp">UPVOTES</span>
+                </div>
+                <button class="px-btn tertiary-mint small" id="copyProfileLinkBtn" type="button">SHARE DISPATCH</button>
+              </div>
+            </div>
+          </section>
+        </div>
       </main>
 
       <footer class="site-footer">
@@ -572,9 +595,9 @@
           <p class="mono-timestamp">NEAR-BLACK #131313 PIXEL CONSOLE &amp; STORYSTREAM COMMUNITY // ZERO GRADIENTS</p>
         </div>
         <div class="footer-links">
-          <a href="#studio">STUDIO</a>
-          <a href="#explore">STORYSTREAM</a>
-          <a href="#workspace">WORKSPACE</a>
+          <a href="#home" data-nav-trigger="home">HOME</a>
+          <a href="#studio" data-nav-trigger="studio">STUDIO</a>
+          <a href="#community" data-nav-trigger="community">COMMUNITY</a>
           <a href="spec/PRD.html">PRD</a>
           <a href="spec/TECHNICAL_SPEC.html">TECH SPEC</a>
         </div>

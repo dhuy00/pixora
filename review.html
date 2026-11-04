@@ -349,8 +349,8 @@
     <div class="scorecard-grid">
       <div class="scorecard-card">
         <div class="scorecard-label">Overall Readiness</div>
-        <div class="scorecard-value" style="color: #f59e0b;">Scaffold / Incomplete</div>
-        <div class="scorecard-detail">Blocked by empty route files & missing configs</div>
+        <div class="scorecard-value" style="color: #22c55e;">Foundation Ready</div>
+        <div class="scorecard-detail">Core setup, DB, envs & route validation complete</div>
       </div>
       <div class="scorecard-card">
         <div class="scorecard-label">Build & TypeScript</div>
@@ -359,8 +359,8 @@
       </div>
       <div class="scorecard-card">
         <div class="scorecard-label">Database / ORM</div>
-        <div class="scorecard-value" style="color: #f59e0b;">Unconfigured</div>
-        <div class="scorecard-detail">Empty prisma folder vs Drizzle in Tech Spec</div>
+        <div class="scorecard-value" style="color: #22c55e;">Configured (Drizzle)</div>
+        <div class="scorecard-detail">Drizzle ORM schema, client, config & scripts set up</div>
       </div>
       <div class="scorecard-card">
         <div class="scorecard-label">Studio Stack</div>
@@ -466,79 +466,53 @@ export default function GlobalError({
     </section>
 
     <!-- Section 2: Database & ORM -->
-    <section class="warning-border">
+    <section class="info-border">
       <div class="section-header">
         <div class="section-title">
-          <span>🗄️ 2. Database & ORM Discrepancy</span>
+          <span>✅ 2. Database & ORM: Drizzle ORM Configured (Resolved)</span>
         </div>
-        <span class="badge badge-warning">Decision Needed</span>
+        <span class="badge badge-success">Resolved</span>
       </div>
       <p>
-        There is a directory named <code>frontend/prisma/</code> and <code>src/lib/db/</code>, but:
+        The empty <code>prisma/</code> directory was removed and <strong>Drizzle ORM + PostgreSQL</strong> has been fully integrated in alignment with <code>spec/TECHNICAL_SPEC.md</code>:
       </p>
       <ul style="margin-left: 1.5rem; margin-bottom: 1rem; color: #cbd5e1;">
-        <li>Neither <code>prisma</code> nor <code>@prisma/client</code> is installed in <code>package.json</code>.</li>
-        <li>There is no <code>schema.prisma</code> inside <code>frontend/prisma/</code>.</li>
-        <li><strong>Specification Conflict:</strong> In <code>spec/TECHNICAL_SPEC.md</code> (Section 2), the documented stack is <strong>PostgreSQL + Drizzle ORM</strong>.</li>
+        <li>Installed <code>drizzle-orm</code>, <code>pg</code>, <code>drizzle-kit</code>, and <code>@types/pg</code>.</li>
+        <li>Created <code>drizzle.config.ts</code> targeting PostgreSQL and schema migrations.</li>
+        <li>Created <code>src/lib/db/schema.ts</code> containing all 13 core tables (Users, Projects, Layers, Frames, Cels, Posts, Tags, Comments, Likes, Bookmarks, Follows) and relational mappings.</li>
+        <li>Created <code>src/lib/db/index.ts</code> singleton client preserving connection pools across Next.js HMR.</li>
+        <li>Added NPM scripts: <code>db:generate</code>, <code>db:migrate</code>, <code>db:push</code>, <code>db:studio</code>.</li>
       </ul>
-
-      <div class="callout">
-        <strong>Recommended Decision:</strong> If aligning with <code>TECHNICAL_SPEC.md</code>, remove <code>frontend/prisma</code> and install Drizzle ORM:
-        <br><code>npm install drizzle-orm pg &amp;&amp; npm install -D drizzle-kit @types/pg</code>
-        <br>If you prefer Prisma, initialize it properly:
-        <br><code>npm install @prisma/client &amp;&amp; npm install -D prisma &amp;&amp; npx prisma init</code>
-      </div>
     </section>
 
     <!-- Section 3: Environment Variables -->
-    <section class="warning-border">
+    <section class="info-border">
       <div class="section-header">
         <div class="section-title">
-          <span>⚙️ 3. Environment Variables Configuration Missing</span>
+          <span>✅ 3. Environment Variables & Validation Configured (Resolved)</span>
         </div>
-        <span class="badge badge-warning">Missing Files</span>
+        <span class="badge badge-success">Resolved</span>
       </div>
       <p>
-        There are currently no <code>.env</code>, <code>.env.local</code>, or <code>.env.example</code> files present in <code>frontend/</code>.
+        Environment configuration has been established with full Zod runtime validation:
       </p>
-      <p>Recommended template for <code>frontend/.env.example</code>:</p>
-      <pre><code># App
-NEXT_PUBLIC_APP_URL="http://localhost:3000"
-
-# Database (PostgreSQL / Neon / Supabase)
-DATABASE_URL="postgresql://postgres:password@localhost:5432/pixora"
-
-# Auth (Better Auth or Supabase Auth)
-BETTER_AUTH_SECRET="your-secret-key-min-32-chars"
-BETTER_AUTH_URL="http://localhost:3000"
-
-# Storage (Cloudflare R2 or Supabase Storage)
-STORAGE_ENDPOINT=""
-STORAGE_ACCESS_KEY_ID=""
-STORAGE_SECRET_ACCESS_KEY=""
-STORAGE_BUCKET_NAME="pixora-assets"</code></pre>
+      <ul style="margin-left: 1.5rem; margin-bottom: 1rem; color: #cbd5e1;">
+        <li>Created <code>frontend/.env.example</code> documenting App URLs, Database, Auth, Storage, and Rate Limiting keys.</li>
+        <li>Created <code>frontend/.env.local</code> with default development values for immediate local execution.</li>
+        <li>Created <code>frontend/src/config/env.ts</code> with a strict Zod validation schema ensuring all required environment variables are present and typed at runtime.</li>
+      </ul>
     </section>
 
     <!-- Section 4: Utilities & UI System -->
     <section class="info-border">
       <div class="section-header">
         <div class="section-title">
-          <span>🧩 4. UI Helper Functions & Components</span>
+          <span>✅ 4. UI Helper Functions & Components (Resolved)</span>
         </div>
-        <span class="badge badge-info">Action Required</span>
+        <span class="badge badge-success">Resolved</span>
       </div>
       <p>
-        <code>clsx</code> and <code>tailwind-merge</code> are installed in <code>package.json</code>, but <code>src/lib/utils/</code> has no helper file. In Tailwind projects, the standard <code>cn()</code> utility is needed to safely merge classes.
-      </p>
-      <p>Create <code>src/lib/utils.ts</code>:</p>
-      <pre><code>import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}</code></pre>
-      <p>
-        Additionally, <code>src/components/ui</code>, <code>layout</code>, and <code>shared</code> are empty. If you plan to use shadcn/ui components, you should run <code>npx shadcn@latest init</code> to configure <code>components.json</code>.
+        The Tailwind class merge utility has been created at <code>frontend/src/lib/utils.ts</code>, exporting <code>cn(...inputs: ClassValue[])</code> backed by <code>clsx</code> and <code>tailwind-merge</code>. The redundant empty directory was pruned so <code>@/lib/utils</code> imports resolve cleanly.
       </p>
     </section>
 
@@ -659,24 +633,24 @@ export function cn(...inputs: ClassValue[]) {
           </label>
         </li>
         <li class="checklist-item">
-          <input type="checkbox" id="c2">
+          <input type="checkbox" id="c2" checked disabled>
           <label class="checklist-text" for="c2">
-            <strong>Create <code>src/lib/utils.ts</code></strong>
-            <span>Implement the <code>cn()</code> utility with <code>clsx</code> and <code>tailwind-merge</code>.</span>
+            <strong>Create <code>src/lib/utils.ts</code> (Resolved)</strong>
+            <span>Verified <code>cn()</code> utility with <code>clsx</code> and <code>tailwind-merge</code>.</span>
           </label>
         </li>
         <li class="checklist-item">
-          <input type="checkbox" id="c3">
+          <input type="checkbox" id="c3" checked disabled>
           <label class="checklist-text" for="c3">
-            <strong>Create <code>.env.example</code> and <code>.env.local</code></strong>
-            <span>Define environment variable keys for App, DB, Auth, and Storage.</span>
+            <strong>Create <code>.env.example</code> and <code>.env.local</code> (Resolved)</strong>
+            <span>Defined environment variable keys and added Zod schema validation in <code>src/config/env.ts</code>.</span>
           </label>
         </li>
         <li class="checklist-item">
-          <input type="checkbox" id="c4">
+          <input type="checkbox" id="c4" checked disabled>
           <label class="checklist-text" for="c4">
-            <strong>Resolve ORM Stack</strong>
-            <span>Either configure Drizzle (per spec) or install and initialize Prisma.</span>
+            <strong>Resolve ORM Stack (Resolved)</strong>
+            <span>Configured Drizzle ORM + PostgreSQL, implemented schema, client, and CLI scripts.</span>
           </label>
         </li>
         <li class="checklist-item">

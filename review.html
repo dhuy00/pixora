@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Next.js Setup Audit & Readiness Review — Pixora</title>
+  <style>
+    :root {
+      --bg-primary: #0f1117;
+      --bg-secondary: #161b26;
+      --bg-tertiary: #1f2737;
+      --border-color: #2b3548;
+      --text-main: #f0f4fc;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+      --accent-purple: #a855f7;
+      --badge-critical-bg: rgba(239, 68, 68, 0.15);
+      --badge-critical-border: #ef4444;
+      --badge-critical-text: #fca5a5;
+      --badge-warning-bg: rgba(245, 158, 11, 0.15);
+      --badge-warning-border: #f59e0b;
+      --badge-warning-text: #fcd34d;
+      --badge-info-bg: rgba(56, 189, 248, 0.15);
+      --badge-info-border: #38bdf8;
+      --badge-info-text: #7dd3fc;
+      --badge-success-bg: rgba(34, 197, 94, 0.15);
+      --badge-success-border: #22c55e;
+      --badge-success-text: #86efac;
+      --code-bg: #090d14;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 2.5rem 1.5rem;
+    }
+
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 2rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      background: linear-gradient(135deg, #38bdf8, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 1rem;
+      margin-top: 0.4rem;
+    }
+
+    .timestamp-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      padding: 0.4rem 0.85rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Scorecard Grid */
+    .scorecard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .scorecard-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.25rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scorecard-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .scorecard-value {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-top: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .scorecard-detail {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      border: 1px solid transparent;
+    }
+
+    .badge-critical {
+      background: var(--badge-critical-bg);
+      border-color: var(--badge-critical-border);
+      color: var(--badge-critical-text);
+    }
+
+    .badge-warning {
+      background: var(--badge-warning-bg);
+      border-color: var(--badge-warning-border);
+      color: var(--badge-warning-text);
+    }
+
+    .badge-info {
+      background: var(--badge-info-bg);
+      border-color: var(--badge-info-border);
+      color: var(--badge-info-text);
+    }
+
+    .badge-success {
+      background: var(--badge-success-bg);
+      border-color: var(--badge-success-border);
+      color: var(--badge-success-text);
+    }
+
+    /* Sections */
+    section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 1.75rem;
+      margin-bottom: 2rem;
+    }
+
+    section.critical-border {
+      border-left: 5px solid #ef4444;
+    }
+
+    section.warning-border {
+      border-left: 5px solid #f59e0b;
+    }
+
+    section.info-border {
+      border-left: 5px solid #38bdf8;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .section-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      color: #cbd5e1;
+    }
+
+    /* Tables */
+    .table-container {
+      overflow-x: auto;
+      margin: 1.25rem 0;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background-color: var(--bg-tertiary);
+      padding: 0.75rem 1rem;
+      font-weight: 600;
+      color: var(--text-main);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      color: #cbd5e1;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:nth-child(even) {
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Code Blocks */
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.85rem;
+      color: #e2e8f0;
+      margin: 1rem 0;
+      line-height: 1.5;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.85em;
+      color: var(--accent-blue);
+    }
+
+    pre code {
+      background: transparent;
+      padding: 0;
+      color: inherit;
+    }
+
+    /* Checklists */
+    .checklist {
+      list-style: none;
+      margin: 1rem 0;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .checklist-item:last-child {
+      border-bottom: none;
+    }
+
+    .checklist-item input[type="checkbox"] {
+      margin-top: 0.25rem;
+      accent-color: var(--accent-purple);
+      cursor: pointer;
+      width: 1.1rem;
+      height: 1.1rem;
+    }
+
+    .checklist-text strong {
+      color: var(--text-main);
+      display: block;
+    }
+
+    .checklist-text span {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .callout {
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+      color: #bae6fd;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="title-row">
+        <div>
+          <h1>Next.js Setup Audit & Readiness Review</h1>
+          <div class="subtitle">Comprehensive analysis of <code>pixora-frontend</code> configuration, routes, dependencies, and spec alignment.</div>
+        </div>
+        <div class="timestamp-badge">
+          <span>🕒 Audited: 2026-11-04</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Overall Readiness Scorecard -->
+    <div class="scorecard-grid">
+      <div class="scorecard-card">
+        <div class="scorecard-label">Overall Readiness</div>
+        <div class="scorecard-value" style="color: #f59e0b;">Scaffold / Incomplete</div>
+        <div class="scorecard-detail">Blocked by empty route files & missing configs</div>
+      </div>
+      <div class="scorecard-card">
+        <div class="scorecard-label">Build & TypeScript</div>
+        <div class="scorecard-value" style="color: #22c55e;">Passing (Resolved)</div>
+        <div class="scorecard-detail">All 8 route files populated & validated</div>
+      </div>
+      <div class="scorecard-card">
+        <div class="scorecard-label">Database / ORM</div>
+        <div class="scorecard-value" style="color: #f59e0b;">Unconfigured</div>
+        <div class="scorecard-detail">Empty prisma folder vs Drizzle in Tech Spec</div>
+      </div>
+      <div class="scorecard-card">
+        <div class="scorecard-label">Studio Stack</div>
+        <div class="scorecard-value" style="color: #38bdf8;">Pending Install</div>
+        <div class="scorecard-detail">Zustand, Dexie, DnD-kit, Image-q not yet added</div>
+      </div>
+    </div>
+
+    <!-- Section 1: Critical Blockers -->
+    <section class="info-border">
+      <div class="section-header">
+        <div class="section-title">
+          <span>✅ 1. Route Files: 0-Byte Route Files (Resolved)</span>
+        </div>
+        <span class="badge badge-success">Resolved</span>
+      </div>
+      <p>
+        Next.js App Router enforces strict TypeScript route typing. Every <code>page.tsx</code>, <code>layout.tsx</code>, <code>error.tsx</code>, and <code>not-found.tsx</code> file must export a valid React component. All <strong>8 previously empty files have now been populated with valid components</strong>, resolving the <code>File is not a module</code> and <code>Type '__InvalidParamMatchingKeys' does not satisfy the constraint 'never'</code> TypeScript errors:
+      </p>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>File Path</th>
+              <th>Status</th>
+              <th>Exported Component</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>src/app/(auth)/login/page.tsx</code></td>
+              <td><span class="badge badge-success">Fixed</span></td>
+              <td><code>LoginPage</code> (Default export)</td>
+            </tr>
+            <tr>
+              <td><code>src/app/(auth)/register/page.tsx</code></td>
+              <td><span class="badge badge-success">Fixed</span></td>
+              <td><code>RegisterPage</code> (Default export)</td>
+            </tr>
+            <tr>
+              <td><code>src/app/(dashboard)/dashboard/page.tsx</code></td>
+              <td><span class="badge badge-success">Fixed</span></td>
+              <td><code>DashboardPage</code> (Default export)</td>
+            </tr>
+            <tr>
+              <td><code>src/app/(dashboard)/setting/page.tsx</code></td>
+              <td><span class="badge badge-success">Fixed</span></td>
+              <td><code>SettingPage</code> (Default export)</td>
+            </tr>
+            <tr>
+              <td><code>src/app/(dashboard)/layout.tsx</code></td>
+              <td><span class="badge badge-success">Fixed</span></td>
+              <td><code>DashboardLayout</code> (Default export with children)</td>
+            </tr>
+            <tr>
+              <td><code>src/app/error.tsx</code></td>
+              <td><span class="badge badge-success">Fixed</span></td>
+              <td><code>GlobalError</code> (<code>'use client'</code> with error & reset)</td>
+            </tr>
+            <tr>
+              <td><code>src/app/loading.tsx</code></td>
+              <td><span class="badge badge-success">Fixed</span></td>
+              <td><code>Loading</code> (Default export spinner)</td>
+            </tr>
+            <tr>
+              <td><code>src/app/not-found.tsx</code></td>
+              <td><span class="badge badge-success">Fixed</span></td>
+              <td><code>NotFound</code> (Default export with Home link)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p><strong>Minimum Fix for <code>src/app/error.tsx</code>:</strong></p>
+      <pre><code>"use client";
+
+import { useEffect } from "react";
+
+export default function GlobalError({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
+  useEffect(() => {
+    console.error(error);
+  }, [error]);
+
+  return (
+    &lt;div className="flex flex-col items-center justify-center min-h-[50vh] p-4 text-center"&gt;
+      &lt;h2 className="text-xl font-bold mb-2"&gt;Something went wrong!&lt;/h2&gt;
+      &lt;button
+        onClick={() =&gt; reset()}
+        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+      &gt;
+        Try again
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+    </section>
+
+    <!-- Section 2: Database & ORM -->
+    <section class="warning-border">
+      <div class="section-header">
+        <div class="section-title">
+          <span>🗄️ 2. Database & ORM Discrepancy</span>
+        </div>
+        <span class="badge badge-warning">Decision Needed</span>
+      </div>
+      <p>
+        There is a directory named <code>frontend/prisma/</code> and <code>src/lib/db/</code>, but:
+      </p>
+      <ul style="margin-left: 1.5rem; margin-bottom: 1rem; color: #cbd5e1;">
+        <li>Neither <code>prisma</code> nor <code>@prisma/client</code> is installed in <code>package.json</code>.</li>
+        <li>There is no <code>schema.prisma</code> inside <code>frontend/prisma/</code>.</li>
+        <li><strong>Specification Conflict:</strong> In <code>spec/TECHNICAL_SPEC.md</code> (Section 2), the documented stack is <strong>PostgreSQL + Drizzle ORM</strong>.</li>
+      </ul>
+
+      <div class="callout">
+        <strong>Recommended Decision:</strong> If aligning with <code>TECHNICAL_SPEC.md</code>, remove <code>frontend/prisma</code> and install Drizzle ORM:
+        <br><code>npm install drizzle-orm pg &amp;&amp; npm install -D drizzle-kit @types/pg</code>
+        <br>If you prefer Prisma, initialize it properly:
+        <br><code>npm install @prisma/client &amp;&amp; npm install -D prisma &amp;&amp; npx prisma init</code>
+      </div>
+    </section>
+
+    <!-- Section 3: Environment Variables -->
+    <section class="warning-border">
+      <div class="section-header">
+        <div class="section-title">
+          <span>⚙️ 3. Environment Variables Configuration Missing</span>
+        </div>
+        <span class="badge badge-warning">Missing Files</span>
+      </div>
+      <p>
+        There are currently no <code>.env</code>, <code>.env.local</code>, or <code>.env.example</code> files present in <code>frontend/</code>.
+      </p>
+      <p>Recommended template for <code>frontend/.env.example</code>:</p>
+      <pre><code># App
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
+
+# Database (PostgreSQL / Neon / Supabase)
+DATABASE_URL="postgresql://postgres:password@localhost:5432/pixora"
+
+# Auth (Better Auth or Supabase Auth)
+BETTER_AUTH_SECRET="your-secret-key-min-32-chars"
+BETTER_AUTH_URL="http://localhost:3000"
+
+# Storage (Cloudflare R2 or Supabase Storage)
+STORAGE_ENDPOINT=""
+STORAGE_ACCESS_KEY_ID=""
+STORAGE_SECRET_ACCESS_KEY=""
+STORAGE_BUCKET_NAME="pixora-assets"</code></pre>
+    </section>
+
+    <!-- Section 4: Utilities & UI System -->
+    <section class="info-border">
+      <div class="section-header">
+        <div class="section-title">
+          <span>🧩 4. UI Helper Functions & Components</span>
+        </div>
+        <span class="badge badge-info">Action Required</span>
+      </div>
+      <p>
+        <code>clsx</code> and <code>tailwind-merge</code> are installed in <code>package.json</code>, but <code>src/lib/utils/</code> has no helper file. In Tailwind projects, the standard <code>cn()</code> utility is needed to safely merge classes.
+      </p>
+      <p>Create <code>src/lib/utils.ts</code>:</p>
+      <pre><code>import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}</code></pre>
+      <p>
+        Additionally, <code>src/components/ui</code>, <code>layout</code>, and <code>shared</code> are empty. If you plan to use shadcn/ui components, you should run <code>npx shadcn@latest init</code> to configure <code>components.json</code>.
+      </p>
+    </section>
+
+    <!-- Section 5: Dependencies vs Technical Spec -->
+    <section class="info-border">
+      <div class="section-header">
+        <div class="section-title">
+          <span>📦 5. Missing Studio & Canvas Dependencies</span>
+        </div>
+        <span class="badge badge-info">Spec Alignment</span>
+      </div>
+      <p>
+        According to <code>spec/TECHNICAL_SPEC.md</code>, Pixora is a hybrid web application with a creative canvas studio (<code>/studio</code>) and community platform. The following libraries specified in the architecture are not yet installed:
+      </p>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Package</th>
+              <th>Category</th>
+              <th>Architectural Purpose in Spec</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>zustand</code> + <code>immer</code></td>
+              <td>State Management</td>
+              <td>Decouples high-frequency pointer drawing loops from React re-renders</td>
+            </tr>
+            <tr>
+              <td><code>@dnd-kit/core</code>, <code>@dnd-kit/sortable</code></td>
+              <td>Interactivity</td>
+              <td>Drag-and-drop animation frames (horizontal) and canvas layers (vertical)</td>
+            </tr>
+            <tr>
+              <td><code>dexie</code></td>
+              <td>Client Storage</td>
+              <td>IndexedDB wrapper for guest drafts, offline cels, and 10MB reference images</td>
+            </tr>
+            <tr>
+              <td><code>image-q</code></td>
+              <td>Pixel Quantization</td>
+              <td>Web Worker color quantization (Wu/NeuQuant) and Floyd-Steinberg dithering</td>
+            </tr>
+            <tr>
+              <td><code>gifenc</code> &amp; <code>upng-js</code></td>
+              <td>Export Engine</td>
+              <td>Animated GIF encoder with frame delays and sprite sheet PNG export</td>
+            </tr>
+            <tr>
+              <td><code>@radix-ui/react-*</code></td>
+              <td>UI Primitives</td>
+              <td>Accessible color popovers, tooltips, dialogs, sliders, and context menus</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 6: Testing Setup -->
+    <section class="info-border">
+      <div class="section-header">
+        <div class="section-title">
+          <span>🧪 6. Testing Infrastructure</span>
+        </div>
+        <span class="badge badge-warning">Unconfigured</span>
+      </div>
+      <p>
+        Empty directories exist at <code>frontend/test/unit</code>, <code>test/integration</code>, and <code>test/e2e</code>, but:
+      </p>
+      <ul style="margin-left: 1.5rem; color: #cbd5e1;">
+        <li>No test runner is installed (no Vitest, Jest, or Playwright).</li>
+        <li>No <code>test</code> script exists in <code>package.json</code>.</li>
+      </ul>
+      <p style="margin-top: 0.8rem;">
+        Recommended setup: Install Vitest for unit tests (fast, ESM/TS native):
+        <br><code>npm install -D vitest @vitejs/plugin-react jsdom @testing-library/react</code>
+      </p>
+    </section>
+
+    <!-- Section 7: Spec Routes -->
+    <section class="info-border">
+      <div class="section-header">
+        <div class="section-title">
+          <span>🗺️ 7. Missing Spec App Routes</span>
+        </div>
+        <span class="badge badge-info">To Be Implemented</span>
+      </div>
+      <p>
+        The primary product features described in <code>spec/PRD.md</code> and <code>spec/TECHNICAL_SPEC.md</code> are not yet stubbed out in the App Router:
+      </p>
+      <ul style="margin-left: 1.5rem; color: #cbd5e1;">
+        <li><code>/studio</code> — Guest / New Canvas Studio (Client-side engine)</li>
+        <li><code>/studio/[projectId]</code> — Cloud Project Studio</li>
+        <li><code>/art/[postId]</code> — Artwork detail &amp; social view page</li>
+        <li><code>/u/[username]</code> — Creator profile</li>
+        <li><code>/workspace</code> — User project dashboard</li>
+      </ul>
+      <p style="margin-top: 0.8rem;">
+        In addition, the root <code>src/app/page.tsx</code> and <code>src/app/layout.tsx</code> currently display default Next.js boilerplate ("Create Next App").
+      </p>
+    </section>
+
+    <!-- Section 8: Action Checklist -->
+    <section>
+      <div class="section-header">
+        <div class="section-title">
+          <span>✅ Actionable Next Steps Checklist</span>
+        </div>
+      </div>
+      <ul class="checklist">
+        <li class="checklist-item">
+          <input type="checkbox" id="c1" checked disabled>
+          <label class="checklist-text" for="c1">
+            <strong>Populate 0-byte route files (Resolved)</strong>
+            <span>Added default exported placeholder components into login, register, dashboard, setting, layout, error.tsx, loading.tsx, not-found.tsx.</span>
+          </label>
+        </li>
+        <li class="checklist-item">
+          <input type="checkbox" id="c2">
+          <label class="checklist-text" for="c2">
+            <strong>Create <code>src/lib/utils.ts</code></strong>
+            <span>Implement the <code>cn()</code> utility with <code>clsx</code> and <code>tailwind-merge</code>.</span>
+          </label>
+        </li>
+        <li class="checklist-item">
+          <input type="checkbox" id="c3">
+          <label class="checklist-text" for="c3">
+            <strong>Create <code>.env.example</code> and <code>.env.local</code></strong>
+            <span>Define environment variable keys for App, DB, Auth, and Storage.</span>
+          </label>
+        </li>
+        <li class="checklist-item">
+          <input type="checkbox" id="c4">
+          <label class="checklist-text" for="c4">
+            <strong>Resolve ORM Stack</strong>
+            <span>Either configure Drizzle (per spec) or install and initialize Prisma.</span>
+          </label>
+        </li>
+        <li class="checklist-item">
+          <input type="checkbox" id="c5">
+          <label class="checklist-text" for="c5">
+            <strong>Install Studio Canvas Libraries</strong>
+            <span>Add <code>zustand</code>, <code>dexie</code>, <code>@dnd-kit</code>, and canvas export tools when building <code>/studio</code>.</span>
+          </label>
+        </li>
+        <li class="checklist-item">
+          <input type="checkbox" id="c6">
+          <label class="checklist-text" for="c6">
+            <strong>Add Root <code>.gitignore</code></strong>
+            <span>Add a <code>.gitignore</code> at the root level (<code>D:\project\pixora\.gitignore</code>) to ensure clean repository management.</span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <footer>
+      Pixora Next.js Setup Audit &bull; Generated for developer review &bull; Ready for next phase of implementation.
+    </footer>
+  </div>
+</body>
+</html>

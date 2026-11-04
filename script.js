@@ -156,7 +156,7 @@ function generateTemplateProject(type, size = 32) {
     }
   };
 
-  const frameCount = type === 'sword' ? 1 : (type === 'duck' || type === 'slime') ? 6 : 4;
+  const frameCount = type === 'sword' ? 1 : (type === 'duck' || type === 'slime' || type === 'spaceship' || type === 'dino') ? 6 : 4;
   const frames = [];
 
   for (let f = 0; f < frameCount; f++) {
@@ -164,7 +164,152 @@ function generateTemplateProject(type, size = 32) {
     const mid = makeGrid();
     const fg = makeGrid();
 
-    if (type === 'duck') {
+    if (type === 'spaceship') {
+      // Starry deep space background with parallax starfield
+      fillRect(bg, 0, 0, size, size, '#0b0f19');
+      fillRect(bg, 0, 0, 12, 10, '#111528');
+      fillRect(bg, 18, 20, 14, 12, '#0d1322');
+
+      const stars = [
+        { x: (6 - f * 2 + size * 2) % size, y: 5, c: '#ffffff' },
+        { x: (18 - f * 2 + size * 2) % size, y: 8, c: '#38bdf8' },
+        { x: (29 - f * 3 + size * 3) % size, y: 6, c: '#ffffff' },
+        { x: (10 - f + size * 2) % size, y: 22, c: '#64748b' },
+        { x: (22 - f * 2 + size * 2) % size, y: 25, c: '#38bdf8' },
+        { x: (31 - f * 3 + size * 3) % size, y: 19, c: '#ffffff' },
+        { x: (4 - f + size * 2) % size, y: 14, c: '#64748b' },
+        { x: (26 - f * 2 + size * 2) % size, y: 28, c: '#818cf8' }
+      ];
+      stars.forEach((s) => {
+        setPx(bg, s.x, s.y, s.c);
+        if (s.c === '#ffffff') setPx(bg, (s.x + 1) % size, s.y, '#1e293b');
+      });
+
+      const bob = [0, -1, 0, 1, 0, -1][f % 6];
+      const y0 = 15 + bob;
+
+      // Nose & Forebody
+      fillRect(mid, 22, y0, 4, 2, '#38bdf8');
+      fillRect(mid, 26, y0, 2, 2, '#ffffff');
+      setPx(mid, 28, y0, '#38bdf8');
+
+      // Fuselage
+      fillRect(mid, 12, y0 - 2, 10, 6, '#1e293b');
+      fillRect(mid, 14, y0 - 1, 8, 4, '#334155');
+      fillRect(mid, 16, y0, 6, 2, '#475569');
+
+      // Cockpit Canopy (Neon Cyan with white glint)
+      fillRect(mid, 18, y0 - 1, 4, 2, '#00d2ff');
+      setPx(mid, 19, y0 - 1, '#ffffff');
+      setPx(mid, 20, y0 - 1, '#3cffd0');
+
+      // Upper Swept Wing
+      fillRect(mid, 11, y0 - 4, 6, 2, '#1e293b');
+      fillRect(mid, 8, y0 - 6, 5, 2, '#334155');
+      fillRect(mid, 6, y0 - 8, 4, 2, '#0f172a');
+      setPx(mid, 6, y0 - 9, '#ff2a85');
+      if (f % 2 === 0) setPx(fg, 6, y0 - 9, '#ffffff');
+
+      // Lower Swept Wing
+      fillRect(mid, 11, y0 + 4, 6, 2, '#1e293b');
+      fillRect(mid, 8, y0 + 6, 5, 2, '#334155');
+      fillRect(mid, 6, y0 + 8, 4, 2, '#0f172a');
+      setPx(mid, 6, y0 + 9, '#00d2ff');
+      if (f % 2 === 1) setPx(fg, 6, y0 + 9, '#ffffff');
+
+      // Engine Mounts
+      fillRect(mid, 7, y0 - 3, 5, 3, '#0f172a');
+      fillRect(mid, 7, y0 + 2, 5, 3, '#0f172a');
+      fillRect(mid, 6, y0 - 2, 2, 2, '#334155');
+      fillRect(mid, 6, y0 + 2, 2, 2, '#334155');
+
+      // Racing chevron stripe
+      fillRect(mid, 13, y0 - 2, 2, 6, '#ffe600');
+
+      // Dual Plasma Thruster Trails (layer-fg)
+      const flameLen = [7, 10, 8, 11, 9, 8][f % 6];
+      for (let i = 0; i < flameLen; i++) {
+        const fx = 5 - i;
+        const color = i < 2 ? '#ffffff' : i < 4 ? '#3cffd0' : i < 7 ? '#5200ff' : '#ff2a85';
+        setPx(fg, fx, y0 - 2, color);
+        if (i < flameLen - 2) setPx(fg, fx, y0 - 1, color);
+        setPx(fg, fx, y0 + 2, color);
+        if (i < flameLen - 2) setPx(fg, fx, y0 + 3, color);
+      }
+      if (f % 2 === 0) {
+        setPx(fg, Math.max(0, 5 - flameLen - 1), y0 - 3, '#3cffd0');
+        setPx(fg, Math.max(0, 5 - flameLen), y0 + 4, '#ff2a85');
+      }
+    } else if (type === 'dino') {
+      // Cyberpunk Ground & Grid Horizon
+      fillRect(bg, 0, 0, size, 22, '#0f172a');
+      fillRect(bg, 0, 22, size, 10, '#111827');
+      for (let x = (f * 2) % 6; x < size; x += 6) {
+        setPx(bg, x, 25, '#3b82f6');
+        setPx(bg, x, 28, '#1d4ed8');
+      }
+      fillRect(bg, 0, 22, size, 1, '#ff2a85');
+
+      const runCycle = f % 6;
+      const bob = [0, -1, 0, 1, 0, -1][runCycle];
+      const jawOpen = runCycle === 2 || runCycle === 3;
+
+      // Dino Tail
+      const tailY = [16, 15, 14, 15, 16, 17][runCycle];
+      fillRect(mid, 3, tailY, 4, 3, '#064e3b');
+      fillRect(mid, 6, tailY - 1, 5, 4, '#047857');
+      setPx(mid, 2, tailY + 1, '#10b981');
+
+      // Dino Torso
+      fillRect(mid, 10, 13 + bob, 9, 8, '#047857');
+      fillRect(mid, 12, 14 + bob, 7, 6, '#10b981');
+
+      // Cyber Dorsal Spikes (Neon Mint)
+      setPx(fg, 9, 12 + bob, '#3cffd0');
+      setPx(fg, 12, 11 + bob, '#3cffd0');
+      setPx(fg, 15, 11 + bob, '#3cffd0');
+      setPx(fg, 18, 12 + bob, '#3cffd0');
+
+      // Head & Snout
+      fillRect(mid, 18, 8 + bob, 8, 6, '#047857');
+      fillRect(mid, 20, 9 + bob, 7, 4, '#10b981');
+      fillRect(mid, 26, 10 + bob, 3, 3, '#10b981');
+
+      // Jaw & Teeth
+      if (jawOpen) {
+        fillRect(mid, 21, 14 + bob, 6, 2, '#064e3b');
+        setPx(fg, 23, 13 + bob, '#ffffff');
+        setPx(fg, 25, 13 + bob, '#ffffff');
+        setPx(fg, 24, 14 + bob, '#ffffff');
+        setPx(fg, 29, 12 + bob, '#ffe600');
+        setPx(fg, 30, 12 + bob, '#ff2a85');
+      } else {
+        fillRect(mid, 21, 13 + bob, 6, 2, '#064e3b');
+        setPx(fg, 23, 13 + bob, '#ffffff');
+        setPx(fg, 25, 13 + bob, '#ffffff');
+      }
+
+      // Cybernetic Glowing Eye (Red/Pink Laser Visor)
+      fillRect(fg, 21, 9 + bob, 3, 2, '#ff0055');
+      setPx(fg, 22, 9 + bob, '#ffffff');
+
+      // Arms
+      fillRect(mid, 19, 16 + bob, 3, 2, '#064e3b');
+      setPx(mid, 22, 17 + bob, '#10b981');
+
+      // Stomping Legs
+      if (runCycle < 3) {
+        fillRect(mid, 15, 21, 3, 4, '#064e3b');
+        fillRect(mid, 16, 24, 4, 2, '#047857');
+        fillRect(mid, 11, 20, 3, 3, '#064e3b');
+        fillRect(mid, 9, 22, 3, 2, '#047857');
+      } else {
+        fillRect(mid, 16, 20, 3, 3, '#064e3b');
+        fillRect(mid, 18, 22, 3, 2, '#047857');
+        fillRect(mid, 12, 21, 3, 4, '#064e3b');
+        fillRect(mid, 11, 24, 4, 2, '#047857');
+      }
+    } else if (type === 'duck') {
       fillRect(bg, 0, 0, size, size, '#181b22');
       fillRect(bg, 15, 0, 2, 3, '#64748b');
       fillCircle(bg, 16, 5, 3, f % 2 === 0 ? '#38bdf8' : '#f43f5e');
@@ -384,6 +529,8 @@ function renderPixelArrayToCanvas(canvas, pixels, size, options = {}) {
 
 // Initialize Community Gallery Posts
 function initCommunityPosts() {
+  const shipProj = generateTemplateProject('spaceship', 32);
+  const dinoProj = generateTemplateProject('dino', 32);
   const duckProj = generateTemplateProject('duck', 32);
   const goblinProj = generateTemplateProject('goblin', 32);
   const slimeProj = generateTemplateProject('slime', 32);
@@ -394,6 +541,50 @@ function initCommunityPosts() {
   appData.posts = [
     {
       id: 'post-1',
+      title: 'Void Cruiser',
+      creator: 'StarPilot',
+      handle: '@starpilot',
+      avatar: 'VC',
+      category: 'Vehicles',
+      isAnimated: true,
+      following: true,
+      fps: 8,
+      likes: 1240,
+      liked: true,
+      bookmarked: true,
+      template: 'spaceship',
+      project: shipProj,
+      palette: ['#0b0f19', '#1e293b', '#38bdf8', '#00d2ff', '#ffe600', '#ff2a85', '#ffffff'],
+      tags: ['spaceship', 'cyberpunk', 'scifi', 'animated'],
+      description: 'Hyperspace interceptor with dual pulsing plasma thrusters and parallax starfield.',
+      comments: [
+        { author: '@mechadino', text: 'The flame particle trail is super fluid!' }
+      ]
+    },
+    {
+      id: 'post-2',
+      title: 'Cyber Rex',
+      creator: 'MechaDino',
+      handle: '@mechadino',
+      avatar: 'CR',
+      category: 'Creatures',
+      isAnimated: true,
+      following: true,
+      fps: 8,
+      likes: 980,
+      liked: false,
+      bookmarked: true,
+      template: 'dino',
+      project: dinoProj,
+      palette: ['#0f172a', '#047857', '#10b981', '#3cffd0', '#ff0055', '#ffe600'],
+      tags: ['dino', 'rex', 'mecha', 'runner'],
+      description: 'Cybernetic T-Rex stomping across neon grid with laser eye and plasma roar.',
+      comments: [
+        { author: '@starpilot', text: 'The running stride and jaw articulation look killer.' }
+      ]
+    },
+    {
+      id: 'post-3',
       title: 'Disco Duck',
       creator: 'DiscoDuck',
       handle: '@discoduck',
@@ -416,7 +607,7 @@ function initCommunityPosts() {
       ]
     },
     {
-      id: 'post-2',
+      id: 'post-4',
       title: 'Night Code Mage',
       creator: 'HexMage',
       handle: '@hexmage',
@@ -438,7 +629,7 @@ function initCommunityPosts() {
       ]
     },
     {
-      id: 'post-3',
+      id: 'post-5',
       title: 'King Slime Bounce',
       creator: 'SlimeCraft',
       handle: '@slimecraft',
@@ -458,7 +649,7 @@ function initCommunityPosts() {
       comments: []
     },
     {
-      id: 'post-4',
+      id: 'post-6',
       title: 'Cyber Cat Unit',
       creator: 'NekoByte',
       handle: '@nekobyte',
@@ -478,7 +669,7 @@ function initCommunityPosts() {
       comments: []
     },
     {
-      id: 'post-5',
+      id: 'post-7',
       title: 'Crystal Aether Blade',
       creator: 'LootGoblin',
       handle: '@lootgoblin',
@@ -498,7 +689,7 @@ function initCommunityPosts() {
       comments: []
     },
     {
-      id: 'post-6',
+      id: 'post-8',
       title: 'Sunset Shrine River',
       creator: 'VinylQuest',
       handle: '@vinylquest',
@@ -546,6 +737,8 @@ function loadStudioTemplate(templateName, customSize = null) {
   studioState.redoStack = [];
 
   const titleMap = {
+    spaceship: 'Void Cruiser',
+    dino: 'Cyber Rex',
     duck: 'Disco Duck',
     goblin: 'Night Mage',
     slime: 'King Slime',
@@ -1503,6 +1696,63 @@ function renderWorkspace() {
   });
 }
 
+// =============================================================================
+// HERO FLAGSHIP PIXEL ART SHOWCASE
+// =============================================================================
+const heroShowcaseState = {
+  activeArt: 'spaceship',
+  project: null,
+  frameIndex: 0
+};
+
+function initHeroShowcase() {
+  loadHeroShowcaseArt('spaceship');
+
+  document.querySelectorAll('[data-showcase-art]').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      playSfx('blip');
+      loadHeroShowcaseArt(btn.dataset.showcaseArt);
+    });
+  });
+}
+
+function loadHeroShowcaseArt(artName) {
+  heroShowcaseState.activeArt = artName;
+  heroShowcaseState.project = generateTemplateProject(artName, 32);
+  heroShowcaseState.frameIndex = 0;
+
+  const infoMap = {
+    spaceship: { name: 'VOID CRUISER', fps: '6F LOOP · 8 FPS' },
+    dino: { name: 'CYBER REX', fps: '6F LOOP · 8 FPS' },
+    duck: { name: 'DISCO DUCK', fps: '6F LOOP · 8 FPS' },
+    goblin: { name: 'NIGHT MAGE', fps: '4F LOOP · 8 FPS' },
+    slime: { name: 'KING SLIME', fps: '6F LOOP · 8 FPS' },
+    cat: { name: 'CYBER CAT', fps: '4F LOOP · 8 FPS' }
+  };
+
+  const info = infoMap[artName] || { name: artName.toUpperCase(), fps: 'ANIMATED LOOP' };
+  const titleEl = document.getElementById('heroShowcaseTitle');
+  const fpsEl = document.getElementById('heroShowcaseFps');
+  if (titleEl) titleEl.textContent = info.name;
+  if (fpsEl) fpsEl.textContent = info.fps;
+
+  document.querySelectorAll('[data-showcase-art]').forEach((btn) => {
+    const isActive = btn.dataset.showcaseArt === artName;
+    btn.classList.toggle('active', isActive);
+    btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+  });
+
+  renderHeroShowcaseCanvas();
+}
+
+function renderHeroShowcaseCanvas() {
+  const canvas = document.getElementById('heroShowcaseCanvas');
+  if (!canvas || !heroShowcaseState.project) return;
+  const pixels = compositeFrame(heroShowcaseState.project, heroShowcaseState.frameIndex);
+  renderPixelArrayToCanvas(canvas, pixels, heroShowcaseState.project.size);
+}
+
 // Global Animation Ticker
 let animTick = 0;
 function startGlobalAnimationLoop() {
@@ -1514,13 +1764,29 @@ function startGlobalAnimationLoop() {
   setInterval(() => {
     animTick += 1;
 
-    if (appData.posts.length >= 3) {
+    // Animate Flagship Pixel Art Showcase
+    if (heroShowcaseState.project && heroShowcaseState.project.frames.length > 1) {
+      heroShowcaseState.frameIndex = (heroShowcaseState.frameIndex + 1) % heroShowcaseState.project.frames.length;
+      renderHeroShowcaseCanvas();
+    }
+
+    const heroMain = document.getElementById('heroCanvasMain');
+    const heroWide = document.getElementById('heroCanvasWide');
+    const heroSmall = document.getElementById('heroCanvasSmall');
+    const heroFour = document.getElementById('heroCanvasFour');
+    const heroFive = document.getElementById('heroCanvasFive');
+
+    if (appData.posts.length >= 5) {
       const p1 = appData.posts[0].project;
       const p2 = appData.posts[1].project;
       const p3 = appData.posts[2].project;
-      renderPixelArrayToCanvas(heroMain, compositeFrame(p1, animTick % p1.frames.length), p1.size);
-      renderPixelArrayToCanvas(heroWide, compositeFrame(p2, animTick % p2.frames.length), p2.size);
-      renderPixelArrayToCanvas(heroSmall, compositeFrame(p3, animTick % p3.frames.length), p3.size);
+      const p4 = appData.posts[3].project;
+      const p5 = appData.posts[4].project;
+      if (heroMain) renderPixelArrayToCanvas(heroMain, compositeFrame(p1, animTick % p1.frames.length), p1.size);
+      if (heroWide) renderPixelArrayToCanvas(heroWide, compositeFrame(p2, animTick % p2.frames.length), p2.size);
+      if (heroSmall) renderPixelArrayToCanvas(heroSmall, compositeFrame(p3, animTick % p3.frames.length), p3.size);
+      if (heroFour) renderPixelArrayToCanvas(heroFour, compositeFrame(p4, animTick % p4.frames.length), p4.size);
+      if (heroFive) renderPixelArrayToCanvas(heroFive, compositeFrame(p5, animTick % p5.frames.length), p5.size);
     }
 
     document.querySelectorAll('.gallery-card-canvas').forEach((c) => {
@@ -1658,9 +1924,9 @@ function bindAppControls() {
     showToast('Started new blank 32×32 canvas');
   });
   document.getElementById('tryTemplateBtn').addEventListener('click', () => {
-    loadStudioTemplate('duck');
+    loadStudioTemplate('spaceship');
     switchPage('studio');
-    showToast('Loaded Disco Duck animation in Studio');
+    showToast('Loaded Void Cruiser in Studio');
   });
 
   document.getElementById('stampDuckBtn').addEventListener('click', stampPartySprite);
@@ -2240,6 +2506,7 @@ function bindAppControls() {
 // Initialize Application
 initCommunityPosts();
 loadStudioTemplate('duck', 32);
+initHeroShowcase();
 bindStudioCanvasEvents();
 renderGalleryGrid();
 renderWorkspace();

@@ -150,13 +150,13 @@ button,
    3. Typography Rules (Manuka ≥60px, Whisper 300 Eyebrows, Mono UPPERCASE)
    ========================================================================== */
 
-/* Hero Wordmark / Display: slightly smaller scale + wider tracking for clean readability */
+/* Hero Wordmark / Display: bold athletic scale for prominent hero fold */
 .hero-wordmark {
   font-family: var(--font-display);
-  font-size: clamp(48px, 6.2vw, 76px);
+  font-size: clamp(32px, 4vw, 50px);
   font-weight: 900;
-  line-height: 0.96;
-  letter-spacing: 0.06em;
+  line-height: 1;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--hazard-white);
   display: inline-block;
@@ -584,44 +584,293 @@ button,
 }
 
 .masthead-section {
-  padding-bottom: 48px;
+  padding-bottom: 36px;
 }
 
 .masthead-wordmark-bar {
-  padding-bottom: 24px;
-  margin-bottom: 24px;
-  border-bottom: 1px solid var(--hazard-white);
+  padding-bottom: 14px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--image-frame);
 }
 
 .hero-wordmark-row {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 0;
+}
+
+.hero-brand-block {
+  display: flex;
+  align-items: center;
   gap: 16px;
-  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.hero-live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(60, 255, 208, 0.1);
+  border: 1px solid var(--jelly-mint);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--jelly-mint);
+  letter-spacing: 1.1px;
+}
+
+.live-dot-pulse {
+  width: 7px;
+  height: 7px;
+  background-color: var(--jelly-mint);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--jelly-mint);
+  animation: pulseNeon 1.5s infinite ease-in-out;
+}
+
+@keyframes pulseNeon {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.75); }
 }
 
 .hero-wordmark-meta {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 8px;
+  gap: 6px;
 }
 
 .intro-strip {
   display: grid;
-  grid-template-columns: 1.35fr 0.85fr;
-  gap: 24px;
+  grid-template-columns: 1.45fr 0.8fr;
+  gap: 22px;
   align-items: stretch;
 }
 
-/* Feature Card (Top Story): #131313 with 1px solid #ffffff hairline, 24px radius, 32px+ padding */
+/* ==========================================================================
+   Hero Feature Card: Headline, Deck, CTAs + Prominent Pixel Art Showcase
+   ========================================================================== */
+.intro-feature-card {
+  background: var(--canvas-black);
+  border: 1px solid var(--hazard-white);
+  border-radius: var(--radius-feature);
+  padding: 30px 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hero-card-content {
+  display: grid;
+  grid-template-columns: 1.12fr auto;
+  gap: 32px;
+  align-items: center;
+}
+
+.hero-card-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+}
+
+.hero-main-title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3.4vw, 42px);
+  font-weight: 900;
+  line-height: 1.0;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--hazard-white);
+  margin: 0;
+}
+
+.serif-deck {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--secondary-text);
+  margin: 0;
+}
+
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.hero-spec-strip {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.hero-spec-strip .mono-timestamp {
+  font-size: 10px;
+  color: var(--secondary-text);
+}
+
+.spec-divider {
+  color: var(--purple-rule);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 10px;
+}
+
+/* ==========================================================================
+   Prominent Flagship Pixel Art Showcase Stage (Bigger Canvas)
+   ========================================================================== */
+.hero-showcase-frame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #14161f;
+  border: 1px solid var(--image-frame);
+  border-radius: 16px;
+  padding: 14px;
+  gap: 10px;
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.5);
+  transition: border-color 200ms ease;
+}
+
+.hero-showcase-frame:hover {
+  border-color: var(--hazard-white);
+}
+
+.showcase-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--hazard-white);
+  letter-spacing: 0.8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--image-frame);
+}
+
+.showcase-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+}
+
+.showcase-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: var(--jelly-mint);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--jelly-mint);
+  animation: pulseNeon 1.5s infinite ease-in-out;
+}
+
+.showcase-fps {
+  font-size: 10px;
+  color: var(--secondary-text);
+}
+
+.showcase-canvas-wrap {
+  position: relative;
+  width: 256px;
+  height: 256px;
+  background-color: #0b0f19;
+  border: 1px solid var(--image-frame);
+  border-radius: var(--radius-nested);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.7);
+}
+
+#heroShowcaseCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.showcase-scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0.32) 3px
+  );
+}
+
+.showcase-switcher {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.showcase-pill {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: var(--surface-slate);
+  color: var(--hazard-white);
+  border: 1px solid #3d3d3d;
+  cursor: pointer;
+  transition: all 140ms ease;
+}
+
+.showcase-pill:hover {
+  border-color: var(--jelly-mint);
+  color: var(--jelly-mint);
+}
+
+.showcase-pill.active {
+  background: var(--jelly-mint);
+  color: var(--absolute-black);
+  border-color: var(--jelly-mint);
+  box-shadow: 0 0 8px rgba(60, 255, 208, 0.3);
+}
+
+@media (max-width: 980px) {
+  .hero-card-content {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .hero-card-copy {
+    align-items: center;
+  }
+
+  .cta-row,
+  .pixel-tag-row,
+  .hero-spec-strip {
+    justify-content: center;
+  }
+}
+
+/* Backward-compatibility fallback */
 .intro-copy {
   background: var(--canvas-black);
   border: 1px solid var(--hazard-white);
   border-radius: var(--radius-feature);
-  padding: 40px;
+  padding: 30px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -634,19 +883,12 @@ button,
   gap: 14px;
 }
 
-.cta-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 24px;
-}
-
 /* ==========================================================================
    StoryStream Mini Rail & Color-Block Tiles (Section 1, 4 & 6)
    ========================================================================== */
 .storystream-mini-rail {
   border-left: 1px dashed var(--purple-rule);
-  padding-left: 20px;
+  padding-left: 18px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -663,21 +905,23 @@ button,
 .intro-featured-cards {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
 }
 
-/* StoryStream Tile: 20px radius, saturated color-block fill, headline shifts to #3860be on hover */
+/* StoryStream Tile: Saturated color-block fill */
 .mini-feature-card {
-  border-radius: var(--radius-card);
-  padding: 20px;
-  display: grid;
-  grid-template-columns: 92px 68px 1fr;
-  gap: 14px;
+  border-radius: 14px;
+  padding: 10px 14px;
+  display: flex;
   align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+  overflow: hidden;
 }
 
-.mini-card-info-wrap {
-  display: contents;
+.mini-feature-card:hover {
+  transform: translateX(4px);
 }
 
 .tile-mint {
@@ -713,36 +957,69 @@ button,
 }
 
 .rail-timestamp-col {
+  flex: 0 0 60px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 6px;
+  gap: 4px;
 }
 
 .mini-stage {
-  width: 68px;
-  height: 68px;
+  flex: 0 0 54px;
+  width: 54px;
+  height: 54px;
+  min-width: 54px;
+  min-height: 54px;
   background: var(--canvas-black);
   border: 1px solid var(--image-frame);
   border-radius: var(--radius-nested);
   display: grid;
   place-items: center;
-  padding: 6px;
+  padding: 4px;
+  box-sizing: border-box;
 }
 
 .mini-stage canvas {
   width: 100%;
   height: 100%;
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.mini-card-info {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  overflow: hidden;
 }
 
 .mini-card-info strong {
   display: block;
   font-family: var(--font-sans);
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 700;
-  line-height: 1.05;
-  margin: 4px 0;
+  line-height: 1.15;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   transition: color 150ms ease;
+}
+
+.mini-card-info .eyebrow-allcaps {
+  font-size: 9px;
+  letter-spacing: 0.8px;
+  line-height: 1;
+}
+
+.mini-card-info .byline-micro {
+  font-size: 9px;
+  letter-spacing: 0.5px;
+  line-height: 1;
 }
 
 /* StoryStream Tile Hover: No lift, no scale — headline text shifts to Deep Link Blue (#3860be) */
@@ -2321,6 +2598,10 @@ input[type="range"] {
 }
 
 @media (max-width: 768px) {
+  .intro-feature-card {
+    padding: 24px 20px;
+  }
+
   .topbar-inner {
     flex-wrap: wrap;
   }
@@ -2335,10 +2616,6 @@ input[type="range"] {
   .gallery-grid,
   .workspace-items-grid,
   .preview-split {
-    grid-template-columns: 1fr;
-  }
-
-  .mini-feature-card {
     grid-template-columns: 1fr;
   }
 

@@ -85,49 +85,97 @@
         <div class="page-view active" id="pageHome" data-page-view="home">
           <!-- 1A. HERO MASTHEAD & LIVE STORYSTREAM RAIL -->
           <section class="masthead-section" aria-labelledby="heroHeading">
-            <div class="masthead-wordmark-bar">
-              <p class="whisper-eyebrow">Chiptune Soundboard Meets Pixel Art Flagship</p>
+            <div class="masthead-wordmark-bar compact-masthead">
               <div class="hero-wordmark-row">
-                <span class="hero-wordmark" aria-hidden="true">PIXAURA</span>
+                <div class="hero-brand-block">
+                  <span class="hero-wordmark" aria-hidden="true">PIXAURA</span>
+                  <span class="pill-tag mint-tag">STUDIO 2.4</span>
+                </div>
                 <div class="hero-wordmark-meta">
-                  <span class="pill-tag ultraviolet-tag">ISSUE 042 // LIVE STREAM</span>
-                  <span class="mono-timestamp">32×32 INTEGER GRID · 16 LAYERS · BAYER 4×4</span>
+                  <span class="mono-timestamp">32×32 INTEGER GRID · 16 LAYERS · CRT FX</span>
                 </div>
               </div>
             </div>
 
             <div class="intro-strip">
-              <!-- Left Feature Card (24px radius, 1px solid #ffffff hairline on #131313) -->
-              <div class="intro-copy">
-                <div class="pixel-tag-row">
-                  <span class="pill-tag mint-tag">TOP STORY // STUDIO 2.4</span>
-                  <span class="whisper-eyebrow">Pixel Console &amp; Animation Engine</span>
-                </div>
-                <h1 id="heroHeading" class="manuka-display-90">DRAW CRISP PIXELS. WIRE THE TIMELINE.</h1>
-                <p class="serif-deck">
-                  A high-contrast darkroom built for sprite animators, synth-heads, and indie game makers. Launch the interactive 32×32 studio console, quantize reference photography with ordered Bayer matrices, or explore the live StoryStream community.
-                </p>
-                <div class="cta-row">
-                  <button class="px-btn primary" id="startDrawingBtn" type="button">LAUNCH PIXEL STUDIO</button>
-                  <button class="px-btn tertiary-mint" id="tryTemplateBtn" type="button">LOAD SAMPLE LOOP</button>
+              <!-- Left Feature Card: Minimal Copy + Prominent Spaceship / Dino Showcase -->
+              <div class="intro-feature-card">
+                <div class="hero-card-content">
+                  <div class="hero-card-copy">
+                    <h1 id="heroHeading" class="hero-main-title">DRAW CRISP PIXELS. ANIMATE IN REALTIME.</h1>
+                    <p class="serif-deck">
+                      A high-contrast darkroom built for sprite animators and indie creators.
+                    </p>
+                    <div class="cta-row">
+                      <button class="px-btn primary" id="startDrawingBtn" type="button">LAUNCH STUDIO →</button>
+                      <button class="px-btn tertiary-mint" id="tryTemplateBtn" type="button">LOAD SAMPLE</button>
+                    </div>
+                  </div>
+
+                  <!-- Right: Flagship Pixel Art Showcase Stage -->
+                  <div class="hero-showcase-frame" aria-label="Featured Pixel Art Showcase">
+                    <div class="showcase-topbar">
+                      <span class="showcase-status"><span class="showcase-dot"></span> <span id="heroShowcaseTitle">VOID CRUISER</span></span>
+                      <span class="showcase-fps" id="heroShowcaseFps">6F LOOP · 8 FPS</span>
+                    </div>
+                    <div class="showcase-canvas-wrap">
+                      <canvas id="heroShowcaseCanvas" width="32" height="32" aria-label="Flagship animated pixel art"></canvas>
+                      <div class="showcase-scanlines" aria-hidden="true"></div>
+                    </div>
+                    <div class="showcase-switcher" role="tablist" aria-label="Showcase characters">
+                      <button class="showcase-pill active" data-showcase-art="spaceship" role="tab" aria-selected="true" type="button">🚀 CRUISER</button>
+                      <button class="showcase-pill" data-showcase-art="dino" role="tab" aria-selected="false" type="button">🦖 CYBER REX</button>
+                      <button class="showcase-pill" data-showcase-art="duck" role="tab" aria-selected="false" type="button">🦆 DUCK</button>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <!-- Right Column: StoryStream Live Sprite Commits on a 1px Purple Rule (#3d00bf) Spine -->
+              <!-- Right Column: StoryStream Live Sprite Commits -->
               <div class="storystream-mini-rail" aria-label="Featured StoryStream sprites">
                 <div class="rail-header">
-                  <span class="eyebrow-allcaps">STORYSTREAM // FEATURED COMMITS</span>
+                  <span class="eyebrow-allcaps">STORYSTREAM // COMMITS</span>
                   <span class="mono-timestamp">LIVE FEED</span>
                 </div>
 
                 <div class="intro-featured-cards">
-                  <article class="mini-feature-card tile-mint" data-open-art="post-1" role="button" tabindex="0">
+                  <article class="mini-feature-card tile-mint" data-open-art="post-1" data-showcase-art="spaceship" role="button" tabindex="0">
                     <div class="rail-timestamp-col">
-                      <span class="mono-timestamp">16:20 UTC</span>
+                      <span class="mono-timestamp">16:20</span>
                       <span class="pill-tag dark-tag">6F LOOP</span>
                     </div>
                     <div class="mini-stage">
-                      <canvas id="heroCanvasMain" width="32" height="32" aria-label="Disco Duck sprite"></canvas>
+                      <canvas id="heroCanvasMain" width="32" height="32" aria-label="Void Cruiser sprite"></canvas>
+                    </div>
+                    <div class="mini-card-info">
+                      <span class="eyebrow-allcaps">VEHICLES</span>
+                      <strong>Void Cruiser</strong>
+                      <span class="byline-micro">BY @STARPILOT</span>
+                    </div>
+                  </article>
+
+                  <article class="mini-feature-card tile-ultraviolet" data-open-art="post-2" data-showcase-art="dino" role="button" tabindex="0">
+                    <div class="rail-timestamp-col">
+                      <span class="mono-timestamp">15:42</span>
+                      <span class="pill-tag dark-tag">6F LOOP</span>
+                    </div>
+                    <div class="mini-stage">
+                      <canvas id="heroCanvasWide" width="32" height="32" aria-label="Cyber Rex sprite"></canvas>
+                    </div>
+                    <div class="mini-card-info">
+                      <span class="eyebrow-allcaps">CREATURES</span>
+                      <strong>Cyber Rex</strong>
+                      <span class="byline-micro">BY @MECHADINO</span>
+                    </div>
+                  </article>
+
+                  <article class="mini-feature-card tile-yellow" data-open-art="post-3" data-showcase-art="duck" role="button" tabindex="0">
+                    <div class="rail-timestamp-col">
+                      <span class="mono-timestamp">14:18</span>
+                      <span class="pill-tag dark-tag">6F LOOP</span>
+                    </div>
+                    <div class="mini-stage">
+                      <canvas id="heroCanvasSmall" width="32" height="32" aria-label="Disco Duck sprite"></canvas>
                     </div>
                     <div class="mini-card-info">
                       <span class="eyebrow-allcaps">CHARACTERS</span>
@@ -136,13 +184,13 @@
                     </div>
                   </article>
 
-                  <article class="mini-feature-card tile-mint" data-open-art="post-2" role="button" tabindex="0">
+                  <article class="mini-feature-card tile-ultraviolet" data-open-art="post-4" data-showcase-art="goblin" role="button" tabindex="0">
                     <div class="rail-timestamp-col">
-                      <span class="mono-timestamp">15:42 UTC</span>
+                      <span class="mono-timestamp">13:05</span>
                       <span class="pill-tag dark-tag">4F LOOP</span>
                     </div>
                     <div class="mini-stage">
-                      <canvas id="heroCanvasWide" width="32" height="32" aria-label="Night Mage sprite"></canvas>
+                      <canvas id="heroCanvasFour" width="32" height="32" aria-label="Night Mage sprite"></canvas>
                     </div>
                     <div class="mini-card-info">
                       <span class="eyebrow-allcaps">CHARACTERS</span>
@@ -151,20 +199,18 @@
                     </div>
                   </article>
 
-                  <article class="mini-feature-card tile-yellow" data-open-art="post-3" role="button" tabindex="0">
+                  <article class="mini-feature-card tile-mint" data-open-art="post-5" data-showcase-art="slime" role="button" tabindex="0">
                     <div class="rail-timestamp-col">
-                      <span class="mono-timestamp">14:18 UTC</span>
+                      <span class="mono-timestamp">11:50</span>
                       <span class="pill-tag dark-tag">6F LOOP</span>
                     </div>
-                    <div class="mini-card-info-wrap">
-                      <div class="mini-stage">
-                        <canvas id="heroCanvasSmall" width="32" height="32" aria-label="King Slime sprite"></canvas>
-                      </div>
-                      <div class="mini-card-info">
-                        <span class="eyebrow-allcaps">GAME ASSETS</span>
-                        <strong>King Slime</strong>
-                        <span class="byline-micro">BY @SLIMECRAFT</span>
-                      </div>
+                    <div class="mini-stage">
+                      <canvas id="heroCanvasFive" width="32" height="32" aria-label="King Slime sprite"></canvas>
+                    </div>
+                    <div class="mini-card-info">
+                      <span class="eyebrow-allcaps">GAME ASSETS</span>
+                      <strong>King Slime</strong>
+                      <span class="byline-micro">BY @SLIMECRAFT</span>
                     </div>
                   </article>
                 </div>
